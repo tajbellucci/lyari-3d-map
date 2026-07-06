@@ -5,37 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Lyari Transformation Project - Progress Tracker</title>
 <meta name="description" content="Track the Rs 25.28 Billion Lyari Transformation Project across all 13 Union Councils. Real-time progress, budget tracking, and accountability." />
-<meta name="theme-color" content="#f8f9fc" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0a0c10" />
 <style>
 :root {
-  --bg: #f8f9fc;
-  --bg-2: #eef0f5;
-  --panel: #ffffff;
-  --panel-2: #f0f2f7;
-  --panel-3: #e2e5ed;
-  --text: #0f1729;
-  --text-secondary: #3d4a63;
-  --muted: #6b7a94;
-  --accent: #d4510a;
-  --accent-glow: rgba(212,81,10,.12);
-  --infra: #0284c7;
-  --social: #db2777;
-  --env: #16a34a;
-  --border: rgba(0,0,0,.1);
-  --border-hover: rgba(0,0,0,.18);
-  --glass: rgba(255,255,255,.95);
-  --radius: 12px;
-  --radius-lg: 16px;
-  --transition: cubic-bezier(.4,0,.2,1);
-  --success: #16a34a;
-  --warning: #ca8a04;
-  --danger: #dc2626;
-  --info: #0284c7;
-}
-body.dark {
   --bg: #0a0c10;
   --bg-2: #0f1218;
   --panel: #141820;
@@ -52,19 +24,132 @@ body.dark {
   --border: rgba(255,255,255,.06);
   --border-hover: rgba(255,255,255,.12);
   --glass: rgba(20,24,32,.85);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --transition: cubic-bezier(.4,0,.2,1);
   --success: #4ade80;
   --warning: #facc15;
   --danger: #ef4444;
   --info: #38bdf8;
 }
+body.light {
+  --bg: #f8f9fc;
+  --bg-2: #eef0f5;
+  --panel: #ffffff;
+  --panel-2: #f0f2f7;
+  --panel-3: #e2e5ed;
+  --text: #0f1729;
+  --text-secondary: #3d4a63;
+  --muted: #6b7a94;
+  --accent: #d4510a;
+  --accent-glow: rgba(212,81,10,.12);
+  --infra: #0284c7;
+  --social: #db2777;
+  --env: #16a34a;
+  --border: rgba(0,0,0,.1);
+  --border-hover: rgba(0,0,0,.18);
+  --glass: rgba(255,255,255,.95);
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --danger: #dc2626;
+  --info: #0284c7;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Instrument Sans', 'Noto Naskh Arabic', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
 }
+
+/* Auth Gate */
+.auth-gate-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+.auth-gate-overlay.visible {
+  display: flex;
+}
+.auth-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+.auth-box h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.auth-box p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+.auth-box input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  background: var(--panel-2);
+  color: var(--text);
+  margin-bottom: 16px;
+  outline: none;
+}
+.auth-box input:focus {
+  border-color: var(--accent);
+}
+.auth-box button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  transition: opacity .2s;
+}
+.auth-box button:hover {
+  opacity: .9;
+}
+.auth-error {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 12px;
+  display: none;
+}
+.auth-error.visible {
+  display: block;
+}
+
+/* Admin mode borders */
+body.admin-mode .admin-only {
+  border: 1px dashed rgba(255,107,53,.25);
+}
+body.admin-mode .admin-only-flex {
+  display: flex;
+}
+body.admin-mode .admin-only-inline {
+  display: inline;
+}
+
+/* Main content hidden when gate is active */
+#ltp-content.hidden {
+  display: none;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -79,7 +164,6 @@ body {
   gap: 16px;
 }
 .header-left h1 {
-  font-family: 'Bricolage Grotesque', serif;
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -109,6 +193,7 @@ body {
   background: var(--panel);
   color: var(--text);
   transition: all 0.2s var(--transition);
+  text-decoration: none;
 }
 .btn:hover {
   border-color: var(--border-hover);
@@ -139,7 +224,6 @@ body {
   text-align: center;
 }
 .stat-num {
-  font-family: 'Bricolage Grotesque', serif;
   font-size: 32px;
   font-weight: 800;
   color: var(--accent);
@@ -184,7 +268,6 @@ body {
   margin-bottom: 32px;
 }
 .timeline h2, .budget-section h2, .uc-section h2, .gallery-section h2, .log-section h2, .officials-section h2 {
-  font-family: 'Bricolage Grotesque', serif;
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 16px;
@@ -213,8 +296,8 @@ body {
 .timeline-dot.active { background: var(--accent); animation: pulse 2s infinite; }
 .timeline-dot.pending { background: var(--muted); }
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(212,81,10,0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(212,81,10,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(255,107,53,0); }
 }
 .timeline-content { flex: 1; }
 .timeline-content h3 { font-size: 15px; font-weight: 600; }
@@ -230,8 +313,8 @@ body {
   align-self: center;
 }
 .timeline-status-badge.completed { background: rgba(22,163,74,0.15); color: var(--success); }
-.timeline-status-badge.active { background: rgba(212,81,10,0.15); color: var(--accent); }
-.timeline-status-badge.pending { background: rgba(107,122,148,0.15); color: var(--muted); }
+.timeline-status-badge.active { background: rgba(255,107,53,0.15); color: var(--accent); }
+.timeline-status-badge.pending { background: rgba(90,100,120,0.15); color: var(--muted); }
 .budget-section {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -290,7 +373,6 @@ body {
 .uc-name {
   font-weight: 700;
   font-size: 14px;
-  cursor: text;
   padding: 2px 4px;
   border-radius: 4px;
   border: 1px solid transparent;
@@ -302,6 +384,19 @@ body {
   border-color: var(--accent);
   background: var(--panel-2);
 }
+body:not(.admin-mode) .uc-name { cursor: default; }
+body.admin-mode .uc-name { cursor: text; }
+.uc-status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.uc-status-badge.pending { background: rgba(90,100,120,0.15); color: var(--muted); }
+.uc-status-badge.active { background: rgba(255,107,53,0.15); color: var(--accent); }
+.uc-status-badge.completed { background: rgba(22,163,74,0.15); color: var(--success); }
 .uc-status-select {
   font-size: 11px;
   font-weight: 600;
@@ -569,14 +664,15 @@ body {
   letter-spacing: 0.5px;
 }
 .editable-cell {
-  cursor: text;
   padding: 2px 4px;
   border-radius: 4px;
   border: 1px solid transparent;
   transition: border-color 0.2s;
 }
-.editable-cell:hover { border-color: var(--border-hover); }
-.editable-cell:focus {
+body:not(.admin-mode) .editable-cell { cursor: default; }
+body.admin-mode .editable-cell { cursor: text; }
+body.admin-mode .editable-cell:hover { border-color: var(--border-hover); }
+body.admin-mode .editable-cell:focus {
   outline: none;
   border-color: var(--accent);
   background: var(--panel-2);
@@ -624,6 +720,19 @@ body {
 </head>
 <body>
 
+<!-- Auth Gate -->
+<div class="auth-gate-overlay" id="auth-gate">
+  <div class="auth-box">
+    <h2>Admin Access</h2>
+    <p>Enter password to edit project data</p>
+    <input type="password" id="auth-pass" placeholder="Password" onkeydown="if(event.key==='Enter')checkAuth()" />
+    <button onclick="checkAuth()">Unlock</button>
+    <p class="auth-error" id="auth-error">Wrong password</p>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div id="ltp-content">
 <div class="container">
   <div class="header">
     <div class="header-left">
@@ -632,28 +741,21 @@ body {
     </div>
     <div class="header-actions">
       <button class="btn" onclick="toggleTheme()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         Theme
       </button>
-      <button class="btn" onclick="exportData()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-        </svg>
+      <a href="?admin=1" class="btn">Admin Edit</a>
+      <button class="btn admin-only" onclick="exportData()" style="display:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
         Export JSON
       </button>
-      <label class="btn" for="import-input">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-        </svg>
+      <label class="btn admin-only" for="import-input" style="display:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
         Import JSON
       </label>
       <input type="file" id="import-input" class="hidden-input" accept=".json" onchange="importData(event)" />
       <a href="index.html" class="btn btn-accent">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         Back to Crisis Map
       </a>
     </div>
@@ -680,7 +782,7 @@ body {
   <div class="budget-section">
     <div class="section-header">
       <h2>Budget Allocation</h2>
-      <button class="btn btn-sm" onclick="addBudgetItem()">+ Add Item</button>
+      <button class="btn btn-sm admin-only" onclick="addBudgetItem()" style="display:none">+ Add Item</button>
     </div>
     <table class="budget-table">
       <thead>
@@ -688,7 +790,7 @@ body {
           <th>Component</th>
           <th>Description</th>
           <th style="text-align:right">Amount (Rs)</th>
-          <th style="width:40px"></th>
+          <th class="admin-only" style="width:40px;display:none"></th>
         </tr>
       </thead>
       <tbody id="budget-body"></tbody>
@@ -706,13 +808,13 @@ body {
     <h2>Evidence Gallery</h2>
     <div class="gallery-filters" id="gallery-filters"></div>
     <div class="gallery-grid" id="gallery-grid"></div>
-    <p id="gallery-empty" style="color:var(--muted); font-size:13px; text-align:center; padding:24px 0; display:none;">No photos uploaded yet. Add photo URLs in UC cards above.</p>
+    <p id="gallery-empty" style="color:var(--muted); font-size:13px; text-align:center; padding:24px 0; display:none;">No photos uploaded yet.</p>
   </div>
 
   <div class="log-section">
     <div class="section-header">
       <h2>Activity Log</h2>
-      <button class="btn btn-sm btn-danger" onclick="clearLog()">Clear Log</button>
+      <button class="btn btn-sm btn-danger admin-only" onclick="clearLog()" style="display:none">Clear Log</button>
     </div>
     <div class="log-filters">
       <input type="text" class="log-filter-input" placeholder="Filter by UC..." id="log-filter-uc" oninput="renderLog()" />
@@ -724,7 +826,7 @@ body {
   <div class="officials-section">
     <div class="section-header">
       <h2>Key Officials & Accountability</h2>
-      <button class="btn btn-sm" onclick="addOfficial()">+ Add Official</button>
+      <button class="btn btn-sm admin-only" onclick="addOfficial()" style="display:none">+ Add Official</button>
     </div>
     <table class="officials-table">
       <thead>
@@ -733,7 +835,7 @@ body {
           <th>Name</th>
           <th>Party</th>
           <th>Responsibility</th>
-          <th style="width:40px"></th>
+          <th class="admin-only" style="width:40px;display:none"></th>
         </tr>
       </thead>
       <tbody id="officials-body"></tbody>
@@ -748,6 +850,7 @@ body {
     </p>
   </div>
 </div>
+</div>
 
 <div class="modal-overlay" id="photo-modal" onclick="this.classList.remove('active')">
   <img id="modal-img" src="" alt="Evidence photo" />
@@ -755,6 +858,7 @@ body {
 
 <script>
 const STORAGE_KEY = 'lyari-ltp-data';
+const AUTH_KEY = 'lyari-ltp-auth';
 
 function getDefaultData() {
   return {
@@ -803,6 +907,7 @@ function getDefaultData() {
 
 let DATA = load();
 let galleryFilter = 'all';
+let isAdmin = false;
 
 function load() {
   try {
@@ -864,12 +969,12 @@ function renderStats() {
 
 function renderTimeline() {
   document.getElementById('timeline-items').innerHTML = DATA.milestones.map(m => `
-    <div class="timeline-item" onclick="toggleMilestone(${m.id})">
+    <div class="timeline-item" onclick="${isAdmin ? `toggleMilestone(${m.id})` : ''}">
       <div class="timeline-dot ${m.status}"></div>
       <div class="timeline-content">
-        <h3 contenteditable="true" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'title',this.textContent)">${esc(m.title)}</h3>
-        <p contenteditable="true" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'description',this.textContent)">${esc(m.description)}</p>
-        <div class="timeline-date" contenteditable="true" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'date',this.textContent)">${esc(m.date)}</div>
+        <h3 contenteditable="${isAdmin}" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'title',this.textContent)">${esc(m.title)}</h3>
+        <p contenteditable="${isAdmin}" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'description',this.textContent)">${esc(m.description)}</p>
+        <div class="timeline-date" contenteditable="${isAdmin}" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'date',this.textContent)">${esc(m.date)}</div>
       </div>
       <span class="timeline-status-badge ${m.status}">${m.status}</span>
     </div>
@@ -877,6 +982,7 @@ function renderTimeline() {
 }
 
 function toggleMilestone(id) {
+  if (!isAdmin) return;
   const m = DATA.milestones.find(x => x.id === id);
   if (!m) return;
   const order = ['pending', 'active', 'completed'];
@@ -888,6 +994,7 @@ function toggleMilestone(id) {
 }
 
 function editMilestone(id, field, val) {
+  if (!isAdmin) return;
   const m = DATA.milestones.find(x => x.id === id);
   if (!m) return;
   const old = m[field];
@@ -899,24 +1006,26 @@ function editMilestone(id, field, val) {
 }
 
 function renderBudget() {
+  const removeTd = isAdmin ? '' : ' style="display:none"';
   document.getElementById('budget-body').innerHTML = DATA.budget.map((b, i) => `
     <tr>
-      <td><strong contenteditable="true" onblur="editBudget(${i},'component',this.textContent)">${esc(b.component)}</strong></td>
-      <td contenteditable="true" onblur="editBudget(${i},'description',this.textContent)">${esc(b.description)}</td>
-      <td contenteditable="true" style="text-align:right" onblur="editBudget(${i},'amount',this.textContent)">${formatAmount(b.amount)}</td>
-      <td><button class="btn btn-sm btn-danger" onclick="removeBudgetItem(${i})" style="padding:4px 8px">X</button></td>
+      <td><strong contenteditable="${isAdmin}" onblur="editBudget(${i},'component',this.textContent)">${esc(b.component)}</strong></td>
+      <td contenteditable="${isAdmin}" onblur="editBudget(${i},'description',this.textContent)">${esc(b.description)}</td>
+      <td contenteditable="${isAdmin}" style="text-align:right" onblur="editBudget(${i},'amount',this.textContent)">${formatAmount(b.amount)}</td>
+      <td class="admin-only" style="display:none"><button class="btn btn-sm btn-danger" onclick="removeBudgetItem(${i})" style="padding:4px 8px">X</button></td>
     </tr>
   `).join('') + `
     <tr class="total-row">
       <td>TOTAL</td>
       <td></td>
       <td style="text-align:right">${formatAmount(DATA.budget.reduce((a, c) => a + c.amount, 0))}</td>
-      <td></td>
+      <td class="admin-only" style="display:none"></td>
     </tr>
   `;
 }
 
 function editBudget(i, field, val) {
+  if (!isAdmin) return;
   const b = DATA.budget[i];
   if (!b) return;
   if (field === 'amount') {
@@ -932,6 +1041,7 @@ function editBudget(i, field, val) {
 }
 
 function addBudgetItem() {
+  if (!isAdmin) return;
   DATA.budget.push({ component: 'New Component', description: 'Description', amount: 0 });
   log('Added new budget item');
   save();
@@ -940,6 +1050,7 @@ function addBudgetItem() {
 }
 
 function removeBudgetItem(i) {
+  if (!isAdmin) return;
   const name = DATA.budget[i].component;
   DATA.budget.splice(i, 1);
   log(`Removed budget item "${name}"`);
@@ -958,26 +1069,32 @@ function renderUCs() {
   document.getElementById('uc-grid').innerHTML = DATA.ucs.map(uc => `
     <div class="uc-card" data-uc-id="${uc.id}">
       <div class="uc-header">
-        <span class="uc-name" contenteditable="true" onblur="editUCName(${uc.id},this.textContent)">${esc(uc.name)}</span>
-        <select class="uc-status-select" onchange="changeUCStatus(${uc.id},this.value)">
-          <option value="pending" ${uc.status==='pending'?'selected':''}>Pending</option>
-          <option value="active" ${uc.status==='active'?'selected':''}>In Progress</option>
-          <option value="completed" ${uc.status==='completed'?'selected':''}>Completed</option>
-        </select>
+        <span class="uc-name" contenteditable="${isAdmin}" onblur="editUCName(${uc.id},this.textContent)">${esc(uc.name)}</span>
+        ${isAdmin
+          ? `<select class="uc-status-select" onchange="changeUCStatus(${uc.id},this.value)">
+               <option value="pending" ${uc.status==='pending'?'selected':''}>Pending</option>
+               <option value="active" ${uc.status==='active'?'selected':''}>In Progress</option>
+               <option value="completed" ${uc.status==='completed'?'selected':''}>Completed</option>
+             </select>`
+          : `<span class="uc-status-badge ${uc.status}">${uc.status}</span>`
+        }
       </div>
       <div class="uc-progress">
         <div class="uc-progress-header">
           <span class="uc-progress-label">Progress</span>
           <span class="uc-progress-pct">${uc.progress}%</span>
         </div>
-        <input type="range" class="uc-progress-slider" min="0" max="100" value="${uc.progress}" oninput="slideUCProgress(${uc.id},this.value)" />
+        ${isAdmin
+          ? `<input type="range" class="uc-progress-slider" min="0" max="100" value="${uc.progress}" oninput="slideUCProgress(${uc.id},this.value)" />`
+          : ''
+        }
         <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:${uc.progress}%"></div></div>
       </div>
       <ul class="uc-tasks">
         ${['roads','water','sewerage','lights','cabling'].map(t => `
           <li>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
-              <input type="checkbox" class="uc-task-checkbox" ${uc.tasks[t]?'checked':''} onchange="toggleTask(${uc.id},'${t}',this.checked)" />
+            <label style="display:flex;align-items:center;gap:6px;cursor:${isAdmin?'pointer':'default'}">
+              <input type="checkbox" class="uc-task-checkbox" ${uc.tasks[t]?'checked':''} ${isAdmin ? `onchange="toggleTask(${uc.id},'${t}',this.checked)"` : 'disabled'} />
               ${t.charAt(0).toUpperCase()+t.slice(1)}
             </label>
             <span style="font-weight:600;font-size:11px;color:${uc.tasks[t]?'var(--success)':'var(--muted)'}">${uc.tasks[t]?'Done':'Pending'}</span>
@@ -989,12 +1106,12 @@ function renderUCs() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
           Photo Evidence (${uc.photos.length})
         </div>
-        <div class="uc-photo-input-row">
+        <div class="uc-photo-input-row admin-only" style="display:none">
           <input type="text" class="uc-photo-input" placeholder="Paste image URL..." id="photo-input-${uc.id}" />
           <button class="btn btn-sm" onclick="addPhoto(${uc.id})">Add</button>
         </div>
         <div class="uc-photo-grid" id="photo-grid-${uc.id}">
-          ${uc.photos.map((p, pi) => `<img class="uc-photo-thumb" src="${esc(p.url)}" alt="Evidence" onclick="openModal('${esc(p.url)}')" onerror="this.style.display='none'" />`).join('')}
+          ${uc.photos.map((p) => `<img class="uc-photo-thumb" src="${esc(p.url)}" alt="Evidence" onclick="openModal('${esc(p.url)}')" onerror="this.style.display='none'" />`).join('')}
         </div>
       </div>
       <div class="uc-notes">
@@ -1002,7 +1119,7 @@ function renderUCs() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           Notes (${uc.notes.length})
         </div>
-        <div class="uc-note-input-row">
+        <div class="uc-note-input-row admin-only" style="display:none">
           <input type="text" class="uc-note-input" placeholder="Add a note..." id="note-input-${uc.id}" onkeydown="if(event.key==='Enter')addNote(${uc.id})" />
           <button class="btn btn-sm" onclick="addNote(${uc.id})">Add</button>
         </div>
@@ -1011,7 +1128,7 @@ function renderUCs() {
             <div class="uc-note-item">
               <span class="uc-note-text">${esc(n.text)}</span>
               <span class="uc-note-time">${formatTimestamp(n.addedAt)}</span>
-              <button class="uc-note-delete" onclick="deleteNote(${uc.id},${uc.notes.length - 1 - ni})">X</button>
+              ${isAdmin ? `<button class="uc-note-delete" onclick="deleteNote(${uc.id},${uc.notes.length - 1 - ni})">X</button>` : ''}
             </div>
           `).join('')}
         </div>
@@ -1021,6 +1138,7 @@ function renderUCs() {
 }
 
 function editUCName(id, val) {
+  if (!isAdmin) return;
   const uc = DATA.ucs.find(u => u.id === id);
   if (!uc) return;
   const old = uc.name;
@@ -1032,6 +1150,7 @@ function editUCName(id, val) {
 }
 
 function changeUCStatus(id, val) {
+  if (!isAdmin) return;
   const uc = DATA.ucs.find(u => u.id === id);
   if (!uc) return;
   uc.status = val;
@@ -1041,6 +1160,7 @@ function changeUCStatus(id, val) {
 }
 
 function slideUCProgress(id, val) {
+  if (!isAdmin) return;
   const uc = DATA.ucs.find(u => u.id === id);
   if (!uc) return;
   uc.progress = parseInt(val);
@@ -1055,6 +1175,7 @@ function slideUCProgress(id, val) {
 }
 
 function toggleTask(id, task, checked) {
+  if (!isAdmin) return;
   const uc = DATA.ucs.find(u => u.id === id);
   if (!uc) return;
   uc.tasks[task] = checked;
@@ -1065,6 +1186,7 @@ function toggleTask(id, task, checked) {
 }
 
 function addPhoto(id) {
+  if (!isAdmin) return;
   const input = document.getElementById('photo-input-' + id);
   const url = input.value.trim();
   if (!url) return;
@@ -1079,6 +1201,7 @@ function addPhoto(id) {
 }
 
 function addNote(id) {
+  if (!isAdmin) return;
   const input = document.getElementById('note-input-' + id);
   const text = input.value.trim();
   if (!text) return;
@@ -1092,6 +1215,7 @@ function addNote(id) {
 }
 
 function deleteNote(ucId, noteIndex) {
+  if (!isAdmin) return;
   const uc = DATA.ucs.find(u => u.id === ucId);
   if (!uc) return;
   const removed = uc.notes.splice(noteIndex, 1)[0];
@@ -1154,6 +1278,7 @@ function renderLog() {
 }
 
 function clearLog() {
+  if (!isAdmin) return;
   if (!confirm('Clear all activity log entries?')) return;
   DATA.activityLog = [];
   log('Activity log cleared');
@@ -1164,16 +1289,17 @@ function clearLog() {
 function renderOfficials() {
   document.getElementById('officials-body').innerHTML = DATA.officials.map((o, i) => `
     <tr>
-      <td><span class="editable-cell" contenteditable="true" onblur="editOfficial(${i},'role',this.textContent)">${esc(o.role)}</span></td>
-      <td><span class="editable-cell" contenteditable="true" onblur="editOfficial(${i},'name',this.textContent)">${esc(o.name)}</span></td>
-      <td><span class="editable-cell" contenteditable="true" onblur="editOfficial(${i},'party',this.textContent)">${esc(o.party)}</span></td>
-      <td><span class="editable-cell" contenteditable="true" onblur="editOfficial(${i},'responsibility',this.textContent)">${esc(o.responsibility)}</span></td>
-      <td><button class="btn btn-sm btn-danger" onclick="removeOfficial(${i})" style="padding:4px 8px">X</button></td>
+      <td><span class="editable-cell" contenteditable="${isAdmin}" onblur="editOfficial(${i},'role',this.textContent)">${esc(o.role)}</span></td>
+      <td><span class="editable-cell" contenteditable="${isAdmin}" onblur="editOfficial(${i},'name',this.textContent)">${esc(o.name)}</span></td>
+      <td><span class="editable-cell" contenteditable="${isAdmin}" onblur="editOfficial(${i},'party',this.textContent)">${esc(o.party)}</span></td>
+      <td><span class="editable-cell" contenteditable="${isAdmin}" onblur="editOfficial(${i},'responsibility',this.textContent)">${esc(o.responsibility)}</span></td>
+      <td class="admin-only" style="display:none"><button class="btn btn-sm btn-danger" onclick="removeOfficial(${i})" style="padding:4px 8px">X</button></td>
     </tr>
   `).join('');
 }
 
 function editOfficial(i, field, val) {
+  if (!isAdmin) return;
   const o = DATA.officials[i];
   if (!o) return;
   o[field] = val.trim();
@@ -1182,6 +1308,7 @@ function editOfficial(i, field, val) {
 }
 
 function addOfficial() {
+  if (!isAdmin) return;
   DATA.officials.push({ role: 'New Role', name: 'Name', party: 'Party', responsibility: 'Responsibility' });
   log('Added new official');
   save();
@@ -1189,6 +1316,7 @@ function addOfficial() {
 }
 
 function removeOfficial(i) {
+  if (!isAdmin) return;
   const name = DATA.officials[i].name;
   DATA.officials.splice(i, 1);
   log(`Removed official "${name}"`);
@@ -1197,6 +1325,7 @@ function removeOfficial(i) {
 }
 
 function exportData() {
+  if (!isAdmin) return;
   const blob = new Blob([JSON.stringify(DATA, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1209,6 +1338,7 @@ function exportData() {
 }
 
 function importData(e) {
+  if (!isAdmin) return;
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -1243,6 +1373,15 @@ function toggleTheme() {
   applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
 }
 
+function setAdminMode() {
+  isAdmin = true;
+  document.body.classList.add('admin-mode');
+  document.querySelectorAll('.admin-only').forEach(el => {
+    el.style.display = el.classList.contains('admin-only-flex') ? 'flex' : 'block';
+  });
+  document.querySelectorAll('.admin-only-flex').forEach(el => { el.style.display = 'flex'; });
+}
+
 function renderAll() {
   updateOverall();
   renderStats();
@@ -1255,8 +1394,39 @@ function renderAll() {
   document.getElementById('last-updated').textContent = formatTimestamp(DATA.lastUpdated);
 }
 
-applyTheme(currentTheme);
-renderAll();
+// Auth gate
+function checkAuth() {
+  const pass = document.getElementById('auth-pass').value;
+  if (pass === 'hawa') {
+    sessionStorage.setItem(AUTH_KEY, '1');
+    document.getElementById('auth-gate').classList.remove('visible');
+    document.getElementById('ltp-content').classList.remove('hidden');
+    setAdminMode();
+    renderAll();
+  } else {
+    document.getElementById('auth-error').classList.add('visible');
+    document.getElementById('auth-pass').value = '';
+    document.getElementById('auth-pass').focus();
+  }
+}
+
+// Init
+(function init() {
+  applyTheme(currentTheme);
+  const urlParams = new URLSearchParams(window.location.search);
+  const adminParam = urlParams.get('admin') === '1';
+  const authed = sessionStorage.getItem(AUTH_KEY) === '1';
+
+  if (adminParam && !authed) {
+    document.getElementById('auth-gate').classList.add('visible');
+    document.getElementById('ltp-content').classList.add('hidden');
+    document.getElementById('auth-pass').focus();
+  } else if (adminParam && authed) {
+    setAdminMode();
+  }
+
+  renderAll();
+})();
 </script>
 
 </body>
