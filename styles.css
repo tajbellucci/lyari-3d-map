@@ -1009,6 +1009,15 @@ body.light .form-group textarea::placeholder { color: #888; }
   border-color: var(--border-hover);
   transform: translateY(-1px);
 }
+a.stat-card {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+a.stat-card:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+}
 .stat-icon {
   width: 24px; height: 24px;
   background: var(--accent-glow);

@@ -721,7 +721,7 @@ welcomeOverlay.addEventListener("click", e => { if (e.target === welcomeOverlay)
 // ============================================
 // THEME TOGGLE (Light/Dark Mode)
 // ============================================
-let currentTheme = localStorage.getItem("lyari-theme") || "dark";
+let currentTheme = localStorage.getItem("lyari-theme") || "light";
 
 function applyTheme(theme) {
   if (theme === "light") {

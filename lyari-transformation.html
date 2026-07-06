@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lyari Transformation Project - Progress Tracker</title>
+<meta name="description" content="Track the Rs 25.28 Billion Lyari Transformation Project across all 13 Union Councils. Real-time progress, budget tracking, and accountability." />
+<meta name="theme-color" content="#f8f9fc" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fc;
+  --bg-2: #eef0f5;
+  --panel: #ffffff;
+  --panel-2: #f0f2f7;
+  --panel-3: #e2e5ed;
+  --text: #0f1729;
+  --text-secondary: #3d4a63;
+  --muted: #6b7a94;
+  --accent: #d4510a;
+  --accent-glow: rgba(212,81,10,.12);
+  --infra: #0284c7;
+  --social: #db2777;
+  --env: #16a34a;
+  --border: rgba(0,0,0,.1);
+  --border-hover: rgba(0,0,0,.18);
+  --glass: rgba(255,255,255,.95);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --transition: cubic-bezier(.4,0,.2,1);
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --danger: #dc2626;
+  --info: #0284c7;
+}
+body.dark {
+  --bg: #0a0c10;
+  --bg-2: #0f1218;
+  --panel: #141820;
+  --panel-2: #1a1f2a;
+  --panel-3: #222836;
+  --text: #e8edf4;
+  --text-secondary: #8892a4;
+  --muted: #5a6478;
+  --accent: #ff6b35;
+  --accent-glow: rgba(255,107,53,.15);
+  --infra: #38bdf8;
+  --social: #f472b6;
+  --env: #4ade80;
+  --border: rgba(255,255,255,.06);
+  --border-hover: rgba(255,255,255,.12);
+  --glass: rgba(20,24,32,.85);
+  --success: #4ade80;
+  --warning: #facc15;
+  --danger: #ef4444;
+  --info: #38bdf8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Instrument Sans', 'Noto Naskh Arabic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.header-left h1 {
+  font-family: 'Bricolage Grotesque', serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.header-left h1 span { color: var(--accent); }
+.header-left p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-top: 4px;
+}
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  transition: all 0.2s var(--transition);
+}
+.btn:hover {
+  border-color: var(--border-hover);
+  background: var(--panel-2);
+}
+.btn-accent {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.btn-accent:hover {
+  opacity: 0.9;
+}
+
+/* Overview Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Bricolage Grotesque', serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent);
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Progress Bar */
+.progress-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.progress-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+.progress-pct {
+  font-weight: 700;
+  color: var(--accent);
+}
+.progress-bar {
+  height: 12px;
+  background: var(--panel-3);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--success));
+  border-radius: 6px;
+  transition: width 0.5s var(--transition);
+}
+
+/* Timeline */
+.timeline {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.timeline h2 {
+  font-family: 'Bricolage Grotesque', serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.timeline-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.timeline-dot.completed { background: var(--success); }
+.timeline-dot.active { background: var(--accent); animation: pulse 2s infinite; }
+.timeline-dot.pending { background: var(--muted); }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,81,10,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(212,81,10,0); }
+}
+.timeline-content h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.timeline-content p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.timeline-date {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* UC Grid */
+.uc-section {
+  margin-bottom: 32px;
+}
+.uc-section h2 {
+  font-family: 'Bricolage Grotesque', serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.uc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.uc-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: all 0.2s var(--transition);
+}
+.uc-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.uc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.uc-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+.uc-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.uc-status.pending { background: rgba(107,122,148,0.15); color: var(--muted); }
+.uc-status.active { background: rgba(212,81,10,0.15); color: var(--accent); }
+.uc-status.completed { background: rgba(22,163,74,0.15); color: var(--success); }
+.uc-progress {
+  margin-bottom: 12px;
+}
+.uc-progress-bar {
+  height: 6px;
+  background: var(--panel-3);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.uc-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+}
+.uc-tasks {
+  list-style: none;
+}
+.uc-tasks li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+.uc-tasks li:last-child { border-bottom: none; }
+.task-status {
+  font-weight: 600;
+  font-size: 11px;
+}
+.task-status.done { color: var(--success); }
+.task-status.in-progress { color: var(--accent); }
+.task-status.not-started { color: var(--muted); }
+
+/* Mockup Section */
+.mockup-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.mockup-section h2 {
+  font-family: 'Bricolage Grotesque', serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.mockup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.mockup-card {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  background: var(--panel-2);
+}
+.mockup-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+.mockup-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.mockup-card p {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.mockup-placeholder {
+  background: var(--panel-3);
+  border-radius: 8px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+/* Budget Section */
+.budget-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.budget-section h2 {
+  font-family: 'Bricolage Grotesque', serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.budget-table th, .budget-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.budget-table th {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.budget-table td:last-child {
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 32px;
+}
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.footer a:hover { text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container { padding: 16px; }
+  .header-left h1 { font-size: 22px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-num { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Lyari <span>Transformation</span> Project</h1>
+      <p>Rs 25.28 Billion | 13 Union Councils | 4-Year Timeline (2026-2029)</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="toggleTheme()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        Theme
+      </button>
+      <a href="index.html" class="btn btn-accent">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Crisis Map
+      </a>
+    </div>
+  </div>
+
+  <!-- Overview Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num">Rs 25.28B</div>
+      <div class="stat-label">Total Budget</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">13</div>
+      <div class="stat-label">Union Councils</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Year Timeline</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">2029</div>
+      <div class="stat-label">Target Completion</div>
+    </div>
+  </div>
+
+  <!-- Overall Progress -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <span class="progress-title">Overall Project Progress</span>
+      <span class="progress-pct">8% Complete</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: 8%"></div>
+    </div>
+    <p style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);">
+      Phase 1 initiated April 2026. PC-1 approved. Initial infrastructure work pending across all UCs.
+    </p>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline">
+    <h2>Project Timeline</h2>
+    <div class="timeline-items">
+      <div class="timeline-item">
+        <div class="timeline-dot completed"></div>
+        <div class="timeline-content">
+          <h3>PC-1 Approval</h3>
+          <p>Project Concept-1 approved by Sindh government</p>
+          <div class="timeline-date">March 2026</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot completed"></div>
+        <div class="timeline-content">
+          <h3>Formal Inauguration</h3>
+          <p>LG Minister Syed Nasir Hussain Shah inaugurates project in Lyari</p>
+          <div class="timeline-date">April 9, 2026</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot active"></div>
+        <div class="timeline-content">
+          <h3>Phase 1: Basic Infrastructure</h3>
+          <p>Road construction/rehabilitation, new water supply lines, sewerage upgrades, stormwater drain cleaning</p>
+          <div class="timeline-date">April 2026 - December 2026 (Expected)</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot pending"></div>
+        <div class="timeline-content">
+          <h3>Phase 2: Underground Cabling</h3>
+          <p>Electricity infrastructure improvement, underground cable installation</p>
+          <div class="timeline-date">2027 (Expected)</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot pending"></div>
+        <div class="timeline-content">
+          <h3>Phase 3: Beautification</h3>
+          <p>Parks, green belts, public spaces, urban aesthetics</p>
+          <div class="timeline-date">2028 (Expected)</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot pending"></div>
+        <div class="timeline-content">
+          <h3>Completion & Handover</h3>
+          <p>Final inspection, documentation, public audit</p>
+          <div class="timeline-date">2029 (Target)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Budget Breakdown -->
+  <div class="budget-section">
+    <h2>Budget Allocation</h2>
+    <table class="budget-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Description</th>
+          <th style="text-align:right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Roads & Streets</strong></td>
+          <td>Construction, rehabilitation, pothole repair across 13 UCs</td>
+          <td>Rs 8.5B (est.)</td>
+        </tr>
+        <tr>
+          <td><strong>Water Supply</strong></td>
+          <td>New pipelines, pumping stations, solarization</td>
+          <td>Rs 5.2B (est.)</td>
+        </tr>
+        <tr>
+          <td><strong>Sewerage & Drainage</strong></td>
+          <td>Sewer lines, stormwater drains, treatment</td>
+          <td>Rs 4.8B (est.)</td>
+        </tr>
+        <tr>
+          <td><strong>Underground Cabling</strong></td>
+          <td>Electricity infrastructure, cable installation</td>
+          <td>Rs 3.5B (est.)</td>
+        </tr>
+        <tr>
+          <td><strong>Beautification</strong></td>
+          <td>Parks, green belts, public spaces</td>
+          <td>Rs 2.0B (est.)</td>
+        </tr>
+        <tr>
+          <td><strong>Solarization</strong></td>
+          <td>Pumping stations, street lights</td>
+          <td>Rs 1.28B (est.)</td>
+        </tr>
+        <tr style="font-weight:700; border-top: 2px solid var(--border);">
+          <td>TOTAL</td>
+          <td></td>
+          <td>Rs 25.28 Billion</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- UC Progress Grid -->
+  <div class="uc-section">
+    <h2>Union Council Progress</h2>
+    <div class="uc-grid">
+      <!-- UC-1 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-1 Agra Taj Colony</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-2 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-2 Daryaabad</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-3 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-3 Nawabad</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-4 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-4 Khada Memon Society</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-5 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-5 Baghdadi</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-6 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-6 Moosa Lane</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-7 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-7 Shah Baig Line</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-8 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-8 Bihar Colony</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-9 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-9 Ragiwara</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-10 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-10 Singo Line</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-11 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-11 Chakiwara</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-12 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-12 Allama Iqbal Colony</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+      <!-- UC-13 -->
+      <div class="uc-card">
+        <div class="uc-header">
+          <span class="uc-name">UC-13 Jinnahabad-Ghulam Shah Lane</span>
+          <span class="uc-status pending">Pending</span>
+        </div>
+        <div class="uc-progress">
+          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
+          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
+        </div>
+        <ul class="uc-tasks">
+          <li>Road repair <span class="task-status not-started">Not started</span></li>
+          <li>Water supply <span class="task-status not-started">Not started</span></li>
+          <li>Sewerage <span class="task-status not-started">Not started</span></li>
+          <li>Street lights <span class="task-status not-started">Not started</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mockups / Before-After Placeholders -->
+  <div class="mockup-section">
+    <h2>Before / After Mockups</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 14px;">
+      Visual targets for what each component will look like upon completion. Photos will be added as work progresses.
+    </p>
+    <div class="mockup-grid">
+      <div class="mockup-card">
+        <div class="mockup-icon">&#x1F6E4;</div>
+        <h3>Roads & Streets</h3>
+        <p>Smooth asphalt, proper drainage, pedestrian walkways</p>
+        <div class="mockup-placeholder">[ Before Photo ]</div>
+        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-icon">&#x1F4A7;</div>
+        <h3>Water Supply</h3>
+        <p>24/7 piped water, solar-powered pumping stations</p>
+        <div class="mockup-placeholder">[ Before Photo ]</div>
+        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-icon">&#x1F6BD;</div>
+        <h3>Sewerage System</h3>
+        <p>Covered drains, treatment plants, no open sewage</p>
+        <div class="mockup-placeholder">[ Before Photo ]</div>
+        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-icon">&#x26A1;</div>
+        <h3>Underground Cabling</h3>
+        <p>No overhead wires, reliable power, safe streets</p>
+        <div class="mockup-placeholder">[ Before Photo ]</div>
+        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-icon">&#x1F333;</div>
+        <h3>Parks & Green Belts</h3>
+        <p>Public spaces, trees, playgrounds for children</p>
+        <div class="mockup-placeholder">[ Before Photo ]</div>
+        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-icon">&#x1F4A1;</div>
+        <h3>Street Lighting</h3>
+        <p>Solar-powered LED lights, safe nighttime movement</p>
+        <div class="mockup-placeholder">[ Before Photo ]</div>
+        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Officials -->
+  <div class="budget-section">
+    <h2>Key Officials & Accountability</h2>
+    <table class="budget-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Name</th>
+          <th>Party</th>
+          <th>Responsibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>LG Minister, Sindh</strong></td>
+          <td>Syed Nasir Hussain Shah</td>
+          <td>PPP</td>
+          <td>Approved PC-1, inaugurated project, owns 2029 delivery timeline</td>
+        </tr>
+        <tr>
+          <td><strong>Municipal Commissioner</strong></td>
+          <td>Hamad Khan Loran</td>
+          <td>Civil Service</td>
+          <td>Oversees solarization of pumping stations, cross-UC execution</td>
+        </tr>
+        <tr>
+          <td><strong>TMC Lyari Chairman</strong></td>
+          <td>Khalil Hoath</td>
+          <td>PPP</td>
+          <td>Ward-level execution, public accounting of funds received</td>
+        </tr>
+        <tr>
+          <td><strong>Sindh Chief Minister</strong></td>
+          <td>Murad Ali Shah</td>
+          <td>PPP</td>
+          <td>Provincial oversight, budget allocation</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Data sourced from government announcements and news reports. Last updated: July 2026.</p>
+    <p style="margin-top: 8px;">
+      <a href="index.html">Back to Crisis Map</a> | 
+      <a href="admin.html">Admin Panel</a>
+    </p>
+  </div>
+</div>
+
+<script>
+// Theme toggle
+let currentTheme = localStorage.getItem("lyari-ltp-theme") || "light";
+function applyTheme(t) {
+  document.body.classList.toggle("dark", t === "dark");
+  localStorage.setItem("lyari-ltp-theme", t);
+  currentTheme = t;
+}
+function toggleTheme() {
+  applyTheme(currentTheme === "dark" ? "light" : "dark");
+}
+applyTheme(currentTheme);
+</script>
+
+</body>
+</html>
