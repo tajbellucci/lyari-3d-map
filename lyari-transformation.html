@@ -1233,10 +1233,10 @@ function importData(e) {
   e.target.value = '';
 }
 
-let currentTheme = localStorage.getItem('lyari-ltp-theme') || 'light';
+let currentTheme = localStorage.getItem('lyari-theme') || 'dark';
 function applyTheme(t) {
-  document.body.classList.toggle('dark', t === 'dark');
-  localStorage.setItem('lyari-ltp-theme', t);
+  document.body.classList.toggle('light', t === 'light');
+  localStorage.setItem('lyari-theme', t);
   currentTheme = t;
 }
 function toggleTheme() {

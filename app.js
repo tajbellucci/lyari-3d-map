@@ -721,13 +721,13 @@ welcomeOverlay.addEventListener("click", e => { if (e.target === welcomeOverlay)
 // ============================================
 // THEME TOGGLE (Light/Dark Mode)
 // ============================================
-let currentTheme = localStorage.getItem("lyari-theme") || "light";
+let currentTheme = localStorage.getItem("lyari-theme") || "dark";
 
 function applyTheme(theme) {
-  if (theme === "dark") {
-    document.body.classList.add("dark");
+  if (theme === "light") {
+    document.body.classList.add("light");
   } else {
-    document.body.classList.remove("dark");
+    document.body.classList.remove("light");
   }
   localStorage.setItem("lyari-theme", theme);
   currentTheme = theme;

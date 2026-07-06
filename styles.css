@@ -3,34 +3,7 @@
    ============================================ */
 
 :root {
-  /* Light Mode (default) */
-  --bg: #f8f9fc;
-  --bg-2: #eef0f5;
-  --panel: #ffffff;
-  --panel-2: #f0f2f7;
-  --panel-3: #e2e5ed;
-  --text: #0f1729;
-  --text-secondary: #3d4a63;
-  --muted: #6b7a94;
-  --accent: #d4510a;
-  --accent-glow: rgba(212,81,10,.12);
-  --infra: #0284c7;
-  --social: #db2777;
-  --env: #16a34a;
-  --displace: #ca8a04;
-  --crit: #dc2626;
-  --severe: #ea580c;
-  --high: #ca8a04;
-  --border: rgba(0,0,0,.1);
-  --border-hover: rgba(0,0,0,.18);
-  --glass: rgba(255,255,255,.95);
-  --radius: 12px;
-  --radius-lg: 16px;
-  --transition: cubic-bezier(.4,0,.2,1);
-}
-
-/* Dark Mode */
-body.dark {
+  /* Dark Mode (default) */
   --bg: #0a0c10;
   --bg-2: #0f1218;
   --panel: #141820;
@@ -51,6 +24,33 @@ body.dark {
   --border: rgba(255,255,255,.06);
   --border-hover: rgba(255,255,255,.12);
   --glass: rgba(20,24,32,.85);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --transition: cubic-bezier(.4,0,.2,1);
+}
+
+/* Light Mode */
+body.light {
+  --bg: #f8f9fc;
+  --bg-2: #eef0f5;
+  --panel: #ffffff;
+  --panel-2: #f0f2f7;
+  --panel-3: #e2e5ed;
+  --text: #0f1729;
+  --text-secondary: #3d4a63;
+  --muted: #6b7a94;
+  --accent: #d4510a;
+  --accent-glow: rgba(212,81,10,.12);
+  --infra: #0284c7;
+  --social: #db2777;
+  --env: #16a34a;
+  --displace: #ca8a04;
+  --crit: #dc2626;
+  --severe: #ea580c;
+  --high: #ca8a04;
+  --border: rgba(0,0,0,.1);
+  --border-hover: rgba(0,0,0,.18);
+  --glass: rgba(255,255,255,.95);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -561,32 +561,32 @@ html, body {
 }
 .icon-sun { display: none; }
 .icon-moon { display: block; }
-body.dark .icon-sun { display: block; }
-body.dark .icon-moon { display: none; }
+body.light .icon-sun { display: block; }
+body.light .icon-moon { display: none; }
 /* Light mode specific overrides */
-body.dark .grain { opacity: .02; }
-body.dark #sidebar { background: rgba(255,255,255,.95); }
-body.dark .card { background: #ffffff; }
-body.dark .card:hover { background: #fafbfd; }
-body.dark .stat-card { background: #ffffff; }
-body.dark .stat-card:hover { background: #f8f9fc; }
-body.dark .map-popup { background: #ffffff; border-color: rgba(0,0,0,.12); }
-body.dark .map-popup h4 { color: var(--accent); }
-body.dark .map-popup p { color: var(--text-secondary); }
-body.dark #titlebar .titlebar-inner { background: rgba(255,255,255,.92); border-color: rgba(0,0,0,.1); }
-body.dark #modal { background: #ffffff; border-color: rgba(0,0,0,.1); }
-body.dark #modal-head { background: #ffffff; }
-body.dark .disclaimer { background: #f8f9fc; border-color: rgba(0,0,0,.08); }
-body.dark .welcome-modal { background: #ffffff; border-color: rgba(0,0,0,.1); }
-body.dark .submit-highlight { background: linear-gradient(135deg, rgba(74,222,128,.08), rgba(56,189,248,.06)); border-color: rgba(74,222,128,.25); }
-body.dark .welcome-visual { background: #f0f2f7; }
-body.dark .welcome-stats { background: #f8f9fc; border-color: rgba(0,0,0,.08); }
-body.dark .filter-chip { background: #f0f2f7; }
-body.dark .filter-chip.active { color: #ffffff; background: var(--accent); }
-body.dark .marker { border-color: rgba(255,255,255,.9); }
-body.dark .cursor { mix-blend-mode: normal; background: var(--accent); }
-body.dark .cursor-follower { border-color: rgba(212,81,10,.5); }
-body.dark .card-loc { color: var(--text-secondary); }
+body.light .grain { opacity: .02; }
+body.light #sidebar { background: rgba(255,255,255,.95); }
+body.light .card { background: #ffffff; }
+body.light .card:hover { background: #fafbfd; }
+body.light .stat-card { background: #ffffff; }
+body.light .stat-card:hover { background: #f8f9fc; }
+body.light .map-popup { background: #ffffff; border-color: rgba(0,0,0,.12); }
+body.light .map-popup h4 { color: var(--accent); }
+body.light .map-popup p { color: var(--text-secondary); }
+body.light #titlebar .titlebar-inner { background: rgba(255,255,255,.92); border-color: rgba(0,0,0,.1); }
+body.light #modal { background: #ffffff; border-color: rgba(0,0,0,.1); }
+body.light #modal-head { background: #ffffff; }
+body.light .disclaimer { background: #f8f9fc; border-color: rgba(0,0,0,.08); }
+body.light .welcome-modal { background: #ffffff; border-color: rgba(0,0,0,.1); }
+body.light .submit-highlight { background: linear-gradient(135deg, rgba(74,222,128,.08), rgba(56,189,248,.06)); border-color: rgba(74,222,128,.25); }
+body.light .welcome-visual { background: #f0f2f7; }
+body.light .welcome-stats { background: #f8f9fc; border-color: rgba(0,0,0,.08); }
+body.light .filter-chip { background: #f0f2f7; }
+body.light .filter-chip.active { color: #ffffff; background: var(--accent); }
+body.light .marker { border-color: rgba(255,255,255,.9); }
+body.light .cursor { mix-blend-mode: normal; background: var(--accent); }
+body.light .cursor-follower { border-color: rgba(212,81,10,.5); }
+body.light .card-loc { color: var(--text-secondary); }
 .info-btn {
   width: 28px; height: 28px;
   background: var(--panel-2);
@@ -970,13 +970,13 @@ body.dark .card-loc { color: var(--text-secondary); }
   border-left-color: var(--env) !important;
 }
 /* Light mode submit */
-body.dark #submit-modal { background: #ffffff; border-color: rgba(0,0,0,.1); }
-body.dark #submit-head { background: #ffffff; }
-body.dark .form-group input,
-body.dark .form-group select,
-body.dark .form-group textarea { background: #f8f9fc; border-color: rgba(0,0,0,.1); color: #0f1729; }
-body.dark .form-group input::placeholder,
-body.dark .form-group textarea::placeholder { color: #888; }
+body.light #submit-modal { background: #ffffff; border-color: rgba(0,0,0,.1); }
+body.light #submit-head { background: #ffffff; }
+body.light .form-group input,
+body.light .form-group select,
+body.light .form-group textarea { background: #f8f9fc; border-color: rgba(0,0,0,.1); color: #0f1729; }
+body.light .form-group input::placeholder,
+body.light .form-group textarea::placeholder { color: #888; }
 
 .intro-text {
   font-size: 11px;
@@ -1643,8 +1643,8 @@ a.stat-card:hover {
 }
 .accountability-demand b { color: var(--crit); }
 
-body.dark .accountability { background: rgba(220,38,38,.04); border-color: rgba(220,38,38,.15); }
-body.dark .accountability-demand { background: rgba(220,38,38,.06); }
+body.light .accountability { background: rgba(220,38,38,.04); border-color: rgba(220,38,38,.15); }
+body.light .accountability-demand { background: rgba(220,38,38,.06); }
 
 /* Big Idea / Revolutionize section */
 .big-idea {
