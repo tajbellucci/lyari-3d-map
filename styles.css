@@ -1017,6 +1017,42 @@ a.stat-card:hover {
   background: var(--accent-glow);
   border-color: var(--accent);
 }
+.ltp-prominent {
+  border: 2px solid var(--infra);
+  background: linear-gradient(135deg, rgba(56,189,248,.06), rgba(56,189,248,.02));
+  position: relative;
+  overflow: visible;
+}
+.ltp-prominent:hover {
+  background: linear-gradient(135deg, rgba(56,189,248,.12), rgba(56,189,248,.06));
+  border-color: var(--infra);
+  box-shadow: 0 0 20px rgba(56,189,248,.15);
+  transform: translateY(-2px);
+}
+.ltp-icon-pulse {
+  animation: ltpPulse 2.5s ease-in-out infinite;
+}
+@keyframes ltpPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,248,.3); }
+  50% { box-shadow: 0 0 0 6px rgba(56,189,248,0); }
+}
+.ltp-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--infra);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: .5px;
+  animation: ltpBadgeBounce 3s ease-in-out infinite;
+}
+@keyframes ltpBadgeBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
 .stat-icon {
   width: 24px; height: 24px;
   background: var(--accent-glow);
@@ -1831,6 +1867,59 @@ body.dark .accountability-demand { background: rgba(220,38,38,.06); }
 }
 #app.rtl-mode .welcome-steps li {
   flex-direction: row-reverse;
+}
+
+/* LTP Welcome Card */
+.ltp-welcome-card {
+  display: block;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 2px solid var(--infra);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(56,189,248,.06), rgba(56,189,248,.02));
+  text-decoration: none;
+  color: inherit;
+  transition: all .25s ease;
+}
+.ltp-welcome-card:hover {
+  background: linear-gradient(135deg, rgba(56,189,248,.14), rgba(56,189,248,.06));
+  box-shadow: 0 4px 24px rgba(56,189,248,.15);
+  transform: translateY(-1px);
+}
+.ltp-welcome-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.ltp-welcome-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.ltp-welcome-header strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+.ltp-welcome-budget {
+  font-size: 11px;
+  color: var(--infra);
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+.ltp-welcome-desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.ltp-welcome-cta {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--infra);
+  letter-spacing: .3px;
 }
 
 /* ---------- Responsive ---------- */

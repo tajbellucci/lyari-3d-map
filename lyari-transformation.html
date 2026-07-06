@@ -70,8 +70,6 @@ body {
   margin: 0 auto;
   padding: 24px;
 }
-
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -96,6 +94,7 @@ body {
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 .btn {
   display: inline-flex;
@@ -120,11 +119,12 @@ body {
   color: white;
   border-color: var(--accent);
 }
-.btn-accent:hover {
-  opacity: 0.9;
-}
-
-/* Overview Stats */
+.btn-accent:hover { opacity: 0.9; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-danger { background: var(--danger); color: white; border-color: var(--danger); }
+.btn-danger:hover { opacity: 0.85; }
+.btn-success { background: var(--success); color: white; border-color: var(--success); }
+.btn-success:hover { opacity: 0.85; }
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -149,8 +149,6 @@ body {
   color: var(--text-secondary);
   margin-top: 4px;
 }
-
-/* Progress Bar */
 .progress-section {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -161,16 +159,11 @@ body {
 .progress-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
 }
-.progress-title {
-  font-weight: 700;
-  font-size: 16px;
-}
-.progress-pct {
-  font-weight: 700;
-  color: var(--accent);
-}
+.progress-title { font-weight: 700; font-size: 16px; }
+.progress-pct { font-weight: 700; color: var(--accent); font-size: 16px; }
 .progress-bar {
   height: 12px;
   background: var(--panel-3);
@@ -183,8 +176,6 @@ body {
   border-radius: 6px;
   transition: width 0.5s var(--transition);
 }
-
-/* Timeline */
 .timeline {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -192,28 +183,31 @@ body {
   padding: 24px;
   margin-bottom: 32px;
 }
-.timeline h2 {
+.timeline h2, .budget-section h2, .uc-section h2, .gallery-section h2, .log-section h2, .officials-section h2 {
   font-family: 'Bricolage Grotesque', serif;
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
-.timeline-items {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+.timeline-items { display: flex; flex-direction: column; gap: 12px; }
 .timeline-item {
   display: flex;
   gap: 16px;
   align-items: flex-start;
+  padding: 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.2s;
 }
+.timeline-item:hover { background: var(--panel-2); }
 .timeline-dot {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  margin-top: 5px;
+  margin-top: 4px;
   flex-shrink: 0;
+  border: 2px solid transparent;
+  transition: all 0.2s;
 }
 .timeline-dot.completed { background: var(--success); }
 .timeline-dot.active { background: var(--accent); animation: pulse 2s infinite; }
@@ -222,167 +216,28 @@ body {
   0%, 100% { box-shadow: 0 0 0 0 rgba(212,81,10,0.4); }
   50% { box-shadow: 0 0 0 8px rgba(212,81,10,0); }
 }
-.timeline-content h3 {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-.timeline-content p {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-.timeline-date {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-/* UC Grid */
-.uc-section {
-  margin-bottom: 32px;
-}
-.uc-section h2 {
-  font-family: 'Bricolage Grotesque', serif;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-.uc-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-.uc-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  transition: all 0.2s var(--transition);
-}
-.uc-card:hover {
-  border-color: var(--border-hover);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
-.uc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
-.uc-name {
-  font-weight: 700;
-  font-size: 14px;
-}
-.uc-status {
+.timeline-content { flex: 1; }
+.timeline-content h3 { font-size: 15px; font-weight: 600; }
+.timeline-content p { font-size: 13px; color: var(--text-secondary); }
+.timeline-date { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.timeline-status-badge {
   font-size: 11px;
   font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: auto;
+  flex-shrink: 0;
+  align-self: center;
 }
-.uc-status.pending { background: rgba(107,122,148,0.15); color: var(--muted); }
-.uc-status.active { background: rgba(212,81,10,0.15); color: var(--accent); }
-.uc-status.completed { background: rgba(22,163,74,0.15); color: var(--success); }
-.uc-progress {
-  margin-bottom: 12px;
-}
-.uc-progress-bar {
-  height: 6px;
-  background: var(--panel-3);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-top: 6px;
-}
-.uc-progress-fill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 3px;
-}
-.uc-tasks {
-  list-style: none;
-}
-.uc-tasks li {
-  font-size: 12px;
-  color: var(--text-secondary);
-  padding: 4px 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-}
-.uc-tasks li:last-child { border-bottom: none; }
-.task-status {
-  font-weight: 600;
-  font-size: 11px;
-}
-.task-status.done { color: var(--success); }
-.task-status.in-progress { color: var(--accent); }
-.task-status.not-started { color: var(--muted); }
-
-/* Mockup Section */
-.mockup-section {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  margin-bottom: 32px;
-}
-.mockup-section h2 {
-  font-family: 'Bricolage Grotesque', serif;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-.mockup-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-.mockup-card {
-  border: 2px dashed var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  text-align: center;
-  background: var(--panel-2);
-}
-.mockup-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-.mockup-card h3 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.mockup-card p {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.mockup-placeholder {
-  background: var(--panel-3);
-  border-radius: 8px;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 12px;
-}
-
-/* Budget Section */
+.timeline-status-badge.completed { background: rgba(22,163,74,0.15); color: var(--success); }
+.timeline-status-badge.active { background: rgba(212,81,10,0.15); color: var(--accent); }
+.timeline-status-badge.pending { background: rgba(107,122,148,0.15); color: var(--muted); }
 .budget-section {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 32px;
-}
-.budget-section h2 {
-  font-family: 'Bricolage Grotesque', serif;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 16px;
 }
 .budget-table {
   width: 100%;
@@ -405,8 +260,327 @@ body {
   font-weight: 600;
   text-align: right;
 }
-
-/* Footer */
+.budget-table .total-row {
+  font-weight: 700;
+  border-top: 2px solid var(--border);
+}
+.uc-section { margin-bottom: 32px; }
+.uc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.uc-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: all 0.2s var(--transition);
+}
+.uc-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.uc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.uc-name {
+  font-weight: 700;
+  font-size: 14px;
+  cursor: text;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.uc-name:hover { border-color: var(--border-hover); }
+.uc-name:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--panel-2);
+}
+.uc-status-select {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.uc-progress { margin-bottom: 12px; }
+.uc-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.uc-progress-label { font-size: 12px; color: var(--text-secondary); }
+.uc-progress-pct { font-size: 12px; font-weight: 700; color: var(--accent); }
+.uc-progress-slider {
+  width: 100%;
+  margin-top: 6px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+.uc-progress-bar {
+  height: 6px;
+  background: var(--panel-3);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.uc-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+.uc-tasks { list-style: none; margin-top: 12px; }
+.uc-tasks li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.uc-tasks li:last-child { border-bottom: none; }
+.uc-task-checkbox {
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.uc-photos { margin-top: 12px; }
+.uc-photos-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.uc-photo-input-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.uc-photo-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+.uc-photo-input:focus { outline: none; border-color: var(--accent); }
+.uc-photo-grid {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.uc-photo-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.uc-photo-thumb:hover { border-color: var(--accent); }
+.uc-notes { margin-top: 12px; }
+.uc-notes-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.uc-note-input-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.uc-note-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+.uc-note-input:focus { outline: none; border-color: var(--accent); }
+.uc-note-list { max-height: 120px; overflow-y: auto; }
+.uc-note-item {
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.uc-note-item:last-child { border-bottom: none; }
+.uc-note-text { flex: 1; }
+.uc-note-time { color: var(--muted); white-space: nowrap; font-size: 10px; }
+.uc-note-delete {
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 10px;
+  background: none;
+  border: none;
+  padding: 0 2px;
+}
+.gallery-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.gallery-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.gallery-filter-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.gallery-filter-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+.gallery-item {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 1;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.gallery-item:hover { border-color: var(--accent); }
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-item-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4px 8px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+}
+.log-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.log-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.log-filter-input {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+.log-filter-input:focus { outline: none; border-color: var(--accent); }
+.log-list { max-height: 300px; overflow-y: auto; }
+.log-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.log-item:last-child { border-bottom: none; }
+.log-time { color: var(--muted); white-space: nowrap; min-width: 140px; }
+.log-action { color: var(--text-secondary); flex: 1; }
+.log-action strong { color: var(--text); }
+.officials-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.section-header h2 { margin-bottom: 0; }
+.officials-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.officials-table th, .officials-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.officials-table th {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.editable-cell {
+  cursor: text;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.editable-cell:hover { border-color: var(--border-hover); }
+.editable-cell:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--panel-2);
+}
 .footer {
   text-align: center;
   padding: 24px;
@@ -420,24 +594,41 @@ body {
   text-decoration: none;
 }
 .footer a:hover { text-decoration: underline; }
-
-/* Responsive */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.modal-overlay.active { display: flex; }
+.modal-overlay img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: var(--radius);
+  object-fit: contain;
+}
+.hidden-input { display: none; }
 @media (max-width: 768px) {
   .container { padding: 16px; }
   .header-left h1 { font-size: 22px; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .stat-num { font-size: 24px; }
+  .uc-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Header -->
   <div class="header">
     <div class="header-left">
       <h1>Lyari <span>Transformation</span> Project</h1>
-      <p>Rs 25.28 Billion | 13 Union Councils | 4-Year Timeline (2026-2029)</p>
+      <p>Rs 25.28 Billion | 13 Union Councils | 2026-2029</p>
     </div>
     <div class="header-actions">
       <button class="btn" onclick="toggleTheme()">
@@ -446,6 +637,19 @@ body {
         </svg>
         Theme
       </button>
+      <button class="btn" onclick="exportData()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        Export JSON
+      </button>
+      <label class="btn" for="import-input">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
+        Import JSON
+      </label>
+      <input type="file" id="import-input" class="hidden-input" accept=".json" onchange="importData(event)" />
       <a href="index.html" class="btn btn-accent">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -455,489 +659,604 @@ body {
     </div>
   </div>
 
-  <!-- Overview Stats -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-num">Rs 25.28B</div>
-      <div class="stat-label">Total Budget</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">13</div>
-      <div class="stat-label">Union Councils</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">4</div>
-      <div class="stat-label">Year Timeline</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">2029</div>
-      <div class="stat-label">Target Completion</div>
-    </div>
-  </div>
+  <div class="stats-grid" id="stats-grid"></div>
 
-  <!-- Overall Progress -->
   <div class="progress-section">
     <div class="progress-header">
       <span class="progress-title">Overall Project Progress</span>
-      <span class="progress-pct">8% Complete</span>
+      <span class="progress-pct" id="overall-pct-display"></span>
     </div>
     <div class="progress-bar">
-      <div class="progress-fill" style="width: 8%"></div>
+      <div class="progress-fill" id="overall-bar"></div>
     </div>
-    <p style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);">
-      Phase 1 initiated April 2026. PC-1 approved. Initial infrastructure work pending across all UCs.
-    </p>
+    <p style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);" id="overall-note"></p>
   </div>
 
-  <!-- Timeline -->
   <div class="timeline">
     <h2>Project Timeline</h2>
-    <div class="timeline-items">
-      <div class="timeline-item">
-        <div class="timeline-dot completed"></div>
-        <div class="timeline-content">
-          <h3>PC-1 Approval</h3>
-          <p>Project Concept-1 approved by Sindh government</p>
-          <div class="timeline-date">March 2026</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot completed"></div>
-        <div class="timeline-content">
-          <h3>Formal Inauguration</h3>
-          <p>LG Minister Syed Nasir Hussain Shah inaugurates project in Lyari</p>
-          <div class="timeline-date">April 9, 2026</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot active"></div>
-        <div class="timeline-content">
-          <h3>Phase 1: Basic Infrastructure</h3>
-          <p>Road construction/rehabilitation, new water supply lines, sewerage upgrades, stormwater drain cleaning</p>
-          <div class="timeline-date">April 2026 - December 2026 (Expected)</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot pending"></div>
-        <div class="timeline-content">
-          <h3>Phase 2: Underground Cabling</h3>
-          <p>Electricity infrastructure improvement, underground cable installation</p>
-          <div class="timeline-date">2027 (Expected)</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot pending"></div>
-        <div class="timeline-content">
-          <h3>Phase 3: Beautification</h3>
-          <p>Parks, green belts, public spaces, urban aesthetics</p>
-          <div class="timeline-date">2028 (Expected)</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot pending"></div>
-        <div class="timeline-content">
-          <h3>Completion & Handover</h3>
-          <p>Final inspection, documentation, public audit</p>
-          <div class="timeline-date">2029 (Target)</div>
-        </div>
-      </div>
-    </div>
+    <div class="timeline-items" id="timeline-items"></div>
   </div>
 
-  <!-- Budget Breakdown -->
   <div class="budget-section">
-    <h2>Budget Allocation</h2>
+    <div class="section-header">
+      <h2>Budget Allocation</h2>
+      <button class="btn btn-sm" onclick="addBudgetItem()">+ Add Item</button>
+    </div>
     <table class="budget-table">
       <thead>
         <tr>
           <th>Component</th>
           <th>Description</th>
-          <th style="text-align:right">Amount</th>
+          <th style="text-align:right">Amount (Rs)</th>
+          <th style="width:40px"></th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><strong>Roads & Streets</strong></td>
-          <td>Construction, rehabilitation, pothole repair across 13 UCs</td>
-          <td>Rs 8.5B (est.)</td>
-        </tr>
-        <tr>
-          <td><strong>Water Supply</strong></td>
-          <td>New pipelines, pumping stations, solarization</td>
-          <td>Rs 5.2B (est.)</td>
-        </tr>
-        <tr>
-          <td><strong>Sewerage & Drainage</strong></td>
-          <td>Sewer lines, stormwater drains, treatment</td>
-          <td>Rs 4.8B (est.)</td>
-        </tr>
-        <tr>
-          <td><strong>Underground Cabling</strong></td>
-          <td>Electricity infrastructure, cable installation</td>
-          <td>Rs 3.5B (est.)</td>
-        </tr>
-        <tr>
-          <td><strong>Beautification</strong></td>
-          <td>Parks, green belts, public spaces</td>
-          <td>Rs 2.0B (est.)</td>
-        </tr>
-        <tr>
-          <td><strong>Solarization</strong></td>
-          <td>Pumping stations, street lights</td>
-          <td>Rs 1.28B (est.)</td>
-        </tr>
-        <tr style="font-weight:700; border-top: 2px solid var(--border);">
-          <td>TOTAL</td>
-          <td></td>
-          <td>Rs 25.28 Billion</td>
-        </tr>
-      </tbody>
+      <tbody id="budget-body"></tbody>
     </table>
   </div>
 
-  <!-- UC Progress Grid -->
   <div class="uc-section">
-    <h2>Union Council Progress</h2>
-    <div class="uc-grid">
-      <!-- UC-1 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-1 Agra Taj Colony</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-2 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-2 Daryaabad</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-3 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-3 Nawabad</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-4 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-4 Khada Memon Society</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-5 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-5 Baghdadi</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-6 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-6 Moosa Lane</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-7 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-7 Shah Baig Line</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-8 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-8 Bihar Colony</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-9 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-9 Ragiwara</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-10 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-10 Singo Line</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-11 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-11 Chakiwara</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-12 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-12 Allama Iqbal Colony</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
-      <!-- UC-13 -->
-      <div class="uc-card">
-        <div class="uc-header">
-          <span class="uc-name">UC-13 Jinnahabad-Ghulam Shah Lane</span>
-          <span class="uc-status pending">Pending</span>
-        </div>
-        <div class="uc-progress">
-          <span style="font-size:12px; color: var(--text-secondary);">0% Complete</span>
-          <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:0%"></div></div>
-        </div>
-        <ul class="uc-tasks">
-          <li>Road repair <span class="task-status not-started">Not started</span></li>
-          <li>Water supply <span class="task-status not-started">Not started</span></li>
-          <li>Sewerage <span class="task-status not-started">Not started</span></li>
-          <li>Street lights <span class="task-status not-started">Not started</span></li>
-        </ul>
-      </div>
+    <div class="section-header">
+      <h2>Union Council Progress</h2>
     </div>
+    <div class="uc-grid" id="uc-grid"></div>
   </div>
 
-  <!-- Mockups / Before-After Placeholders -->
-  <div class="mockup-section">
-    <h2>Before / After Mockups</h2>
-    <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 14px;">
-      Visual targets for what each component will look like upon completion. Photos will be added as work progresses.
-    </p>
-    <div class="mockup-grid">
-      <div class="mockup-card">
-        <div class="mockup-icon">&#x1F6E4;</div>
-        <h3>Roads & Streets</h3>
-        <p>Smooth asphalt, proper drainage, pedestrian walkways</p>
-        <div class="mockup-placeholder">[ Before Photo ]</div>
-        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
-      </div>
-      <div class="mockup-card">
-        <div class="mockup-icon">&#x1F4A7;</div>
-        <h3>Water Supply</h3>
-        <p>24/7 piped water, solar-powered pumping stations</p>
-        <div class="mockup-placeholder">[ Before Photo ]</div>
-        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
-      </div>
-      <div class="mockup-card">
-        <div class="mockup-icon">&#x1F6BD;</div>
-        <h3>Sewerage System</h3>
-        <p>Covered drains, treatment plants, no open sewage</p>
-        <div class="mockup-placeholder">[ Before Photo ]</div>
-        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
-      </div>
-      <div class="mockup-card">
-        <div class="mockup-icon">&#x26A1;</div>
-        <h3>Underground Cabling</h3>
-        <p>No overhead wires, reliable power, safe streets</p>
-        <div class="mockup-placeholder">[ Before Photo ]</div>
-        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
-      </div>
-      <div class="mockup-card">
-        <div class="mockup-icon">&#x1F333;</div>
-        <h3>Parks & Green Belts</h3>
-        <p>Public spaces, trees, playgrounds for children</p>
-        <div class="mockup-placeholder">[ Before Photo ]</div>
-        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
-      </div>
-      <div class="mockup-card">
-        <div class="mockup-icon">&#x1F4A1;</div>
-        <h3>Street Lighting</h3>
-        <p>Solar-powered LED lights, safe nighttime movement</p>
-        <div class="mockup-placeholder">[ Before Photo ]</div>
-        <div class="mockup-placeholder" style="margin-top:8px">[ After Photo ]</div>
-      </div>
-    </div>
+  <div class="gallery-section">
+    <h2>Evidence Gallery</h2>
+    <div class="gallery-filters" id="gallery-filters"></div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <p id="gallery-empty" style="color:var(--muted); font-size:13px; text-align:center; padding:24px 0; display:none;">No photos uploaded yet. Add photo URLs in UC cards above.</p>
   </div>
 
-  <!-- Key Officials -->
-  <div class="budget-section">
-    <h2>Key Officials & Accountability</h2>
-    <table class="budget-table">
+  <div class="log-section">
+    <div class="section-header">
+      <h2>Activity Log</h2>
+      <button class="btn btn-sm btn-danger" onclick="clearLog()">Clear Log</button>
+    </div>
+    <div class="log-filters">
+      <input type="text" class="log-filter-input" placeholder="Filter by UC..." id="log-filter-uc" oninput="renderLog()" />
+      <input type="text" class="log-filter-input" placeholder="Filter by action..." id="log-filter-action" oninput="renderLog()" />
+    </div>
+    <div class="log-list" id="log-list"></div>
+  </div>
+
+  <div class="officials-section">
+    <div class="section-header">
+      <h2>Key Officials & Accountability</h2>
+      <button class="btn btn-sm" onclick="addOfficial()">+ Add Official</button>
+    </div>
+    <table class="officials-table">
       <thead>
         <tr>
           <th>Role</th>
           <th>Name</th>
           <th>Party</th>
           <th>Responsibility</th>
+          <th style="width:40px"></th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><strong>LG Minister, Sindh</strong></td>
-          <td>Syed Nasir Hussain Shah</td>
-          <td>PPP</td>
-          <td>Approved PC-1, inaugurated project, owns 2029 delivery timeline</td>
-        </tr>
-        <tr>
-          <td><strong>Municipal Commissioner</strong></td>
-          <td>Hamad Khan Loran</td>
-          <td>Civil Service</td>
-          <td>Oversees solarization of pumping stations, cross-UC execution</td>
-        </tr>
-        <tr>
-          <td><strong>TMC Lyari Chairman</strong></td>
-          <td>Khalil Hoath</td>
-          <td>PPP</td>
-          <td>Ward-level execution, public accounting of funds received</td>
-        </tr>
-        <tr>
-          <td><strong>Sindh Chief Minister</strong></td>
-          <td>Murad Ali Shah</td>
-          <td>PPP</td>
-          <td>Provincial oversight, budget allocation</td>
-        </tr>
-      </tbody>
+      <tbody id="officials-body"></tbody>
     </table>
   </div>
 
-  <!-- Footer -->
   <div class="footer">
-    <p>Data sourced from government announcements and news reports. Last updated: July 2026.</p>
+    <p>Data last updated: <span id="last-updated"></span></p>
+    <p style="margin-top: 4px;">This page is community-maintained. All edits are logged.</p>
     <p style="margin-top: 8px;">
-      <a href="index.html">Back to Crisis Map</a> | 
-      <a href="admin.html">Admin Panel</a>
+      <a href="index.html">Back to Crisis Map</a>
     </p>
   </div>
 </div>
 
+<div class="modal-overlay" id="photo-modal" onclick="this.classList.remove('active')">
+  <img id="modal-img" src="" alt="Evidence photo" />
+</div>
+
 <script>
-// Theme toggle
-let currentTheme = localStorage.getItem("lyari-ltp-theme") || "light";
+const STORAGE_KEY = 'lyari-ltp-data';
+
+function getDefaultData() {
+  return {
+    overallProgress: 8,
+    lastUpdated: new Date().toISOString(),
+    milestones: [
+      { id: 1, title: 'PC-1 Approval', date: 'March 2026', status: 'completed', description: 'Project Concept-1 approved by Sindh government' },
+      { id: 2, title: 'Formal Inauguration', date: 'April 9, 2026', status: 'completed', description: 'LG Minister Syed Nasir Hussain Shah inaugurates project in Lyari' },
+      { id: 3, title: 'Phase 1: Basic Infrastructure', date: 'April 2026 - December 2026 (Expected)', status: 'active', description: 'Road construction/rehabilitation, new water supply lines, sewerage upgrades, stormwater drain cleaning' },
+      { id: 4, title: 'Phase 2: Underground Cabling', date: '2027 (Expected)', status: 'pending', description: 'Electricity infrastructure improvement, underground cable installation' },
+      { id: 5, title: 'Phase 3: Beautification', date: '2028 (Expected)', status: 'pending', description: 'Parks, green belts, public spaces, urban aesthetics' },
+      { id: 6, title: 'Completion & Handover', date: '2029 (Target)', status: 'pending', description: 'Final inspection, documentation, public audit' }
+    ],
+    budget: [
+      { component: 'Roads & Streets', description: 'Construction, rehabilitation, pothole repair across 13 UCs', amount: 8500000000 },
+      { component: 'Water Supply', description: 'New pipelines, pumping stations, solarization', amount: 5200000000 },
+      { component: 'Sewerage & Drainage', description: 'Sewer lines, stormwater drains, treatment', amount: 4800000000 },
+      { component: 'Underground Cabling', description: 'Electricity infrastructure, cable installation', amount: 3500000000 },
+      { component: 'Beautification', description: 'Parks, green belts, public spaces', amount: 2000000000 },
+      { component: 'Solarization', description: 'Pumping stations, street lights', amount: 1280000000 }
+    ],
+    ucs: [
+      { id: 1, name: 'UC-1 Agra Taj Colony', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 2, name: 'UC-2 Daryaabad', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 3, name: 'UC-3 Nawabad', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 4, name: 'UC-4 Khada Memon Society', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 5, name: 'UC-5 Baghdadi', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 6, name: 'UC-6 Moosa Lane', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 7, name: 'UC-7 Shah Baig Line', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 8, name: 'UC-8 Bihar Colony', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 9, name: 'UC-9 Ragiwara', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 10, name: 'UC-10 Singo Line', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 11, name: 'UC-11 Chakiwara', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 12, name: 'UC-12 Allama Iqbal Colony', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] },
+      { id: 13, name: 'UC-13 Jinnahabad-Ghulam Shah Lane', status: 'pending', progress: 0, tasks: { roads: false, water: false, sewerage: false, lights: false, cabling: false }, photos: [], notes: [] }
+    ],
+    officials: [
+      { role: 'LG Minister, Sindh', name: 'Syed Nasir Hussain Shah', party: 'PPP', responsibility: 'Approved PC-1, inaugurated project, owns 2029 delivery timeline' },
+      { role: 'Municipal Commissioner', name: 'Hamad Khan Loran', party: 'Civil Service', responsibility: 'Oversees solarization of pumping stations, cross-UC execution' },
+      { role: 'TMC Lyari Chairman', name: 'Khalil Hoath', party: 'PPP', responsibility: 'Ward-level execution, public accounting of funds received' },
+      { role: 'Sindh Chief Minister', name: 'Murad Ali Shah', party: 'PPP', responsibility: 'Provincial oversight, budget allocation' }
+    ],
+    activityLog: []
+  };
+}
+
+let DATA = load();
+let galleryFilter = 'all';
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d && d.ucs) return d;
+    }
+  } catch(e) {}
+  return getDefaultData();
+}
+
+function save() {
+  DATA.lastUpdated = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+}
+
+function log(action) {
+  DATA.activityLog.unshift({ action, timestamp: new Date().toISOString() });
+  if (DATA.activityLog.length > 500) DATA.activityLog.length = 500;
+}
+
+function formatAmount(n) {
+  if (n >= 1e9) return 'Rs ' + (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return 'Rs ' + (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return 'Rs ' + (n / 1e3).toFixed(0) + 'K';
+  return 'Rs ' + n;
+}
+
+function formatTimestamp(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function calcOverallProgress() {
+  if (!DATA.ucs.length) return 0;
+  const sum = DATA.ucs.reduce((a, c) => a + c.progress, 0);
+  return Math.round(sum / DATA.ucs.length);
+}
+
+function updateOverall() {
+  DATA.overallProgress = calcOverallProgress();
+  document.getElementById('overall-pct-display').textContent = DATA.overallProgress + '% Complete';
+  document.getElementById('overall-bar').style.width = DATA.overallProgress + '%';
+  document.getElementById('overall-note').textContent = 'Phase 1 initiated April 2026. PC-1 approved. Average across all UCs: ' + DATA.overallProgress + '%.';
+}
+
+function renderStats() {
+  const totalBudget = DATA.budget.reduce((a, c) => a + c.amount, 0);
+  const completedUCs = DATA.ucs.filter(u => u.status === 'completed').length;
+  const activeUCs = DATA.ucs.filter(u => u.status === 'active').length;
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${formatAmount(totalBudget)}</div><div class="stat-label">Total Budget</div></div>
+    <div class="stat-card"><div class="stat-num">13</div><div class="stat-label">Union Councils</div></div>
+    <div class="stat-card"><div class="stat-num">${activeUCs}</div><div class="stat-label">Active UCs</div></div>
+    <div class="stat-card"><div class="stat-num">${completedUCs}</div><div class="stat-label">Completed UCs</div></div>
+  `;
+}
+
+function renderTimeline() {
+  document.getElementById('timeline-items').innerHTML = DATA.milestones.map(m => `
+    <div class="timeline-item" onclick="toggleMilestone(${m.id})">
+      <div class="timeline-dot ${m.status}"></div>
+      <div class="timeline-content">
+        <h3 contenteditable="true" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'title',this.textContent)">${esc(m.title)}</h3>
+        <p contenteditable="true" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'description',this.textContent)">${esc(m.description)}</p>
+        <div class="timeline-date" contenteditable="true" onclick="event.stopPropagation()" onblur="editMilestone(${m.id},'date',this.textContent)">${esc(m.date)}</div>
+      </div>
+      <span class="timeline-status-badge ${m.status}">${m.status}</span>
+    </div>
+  `).join('');
+}
+
+function toggleMilestone(id) {
+  const m = DATA.milestones.find(x => x.id === id);
+  if (!m) return;
+  const order = ['pending', 'active', 'completed'];
+  const next = order[(order.indexOf(m.status) + 1) % 3];
+  m.status = next;
+  log(`Milestone "${m.title}" status changed to <strong>${next}</strong>`);
+  save();
+  renderTimeline();
+}
+
+function editMilestone(id, field, val) {
+  const m = DATA.milestones.find(x => x.id === id);
+  if (!m) return;
+  const old = m[field];
+  m[field] = val.trim();
+  if (old !== m[field]) {
+    log(`Milestone "${m.title}" ${field} updated`);
+    save();
+  }
+}
+
+function renderBudget() {
+  document.getElementById('budget-body').innerHTML = DATA.budget.map((b, i) => `
+    <tr>
+      <td><strong contenteditable="true" onblur="editBudget(${i},'component',this.textContent)">${esc(b.component)}</strong></td>
+      <td contenteditable="true" onblur="editBudget(${i},'description',this.textContent)">${esc(b.description)}</td>
+      <td contenteditable="true" style="text-align:right" onblur="editBudget(${i},'amount',this.textContent)">${formatAmount(b.amount)}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="removeBudgetItem(${i})" style="padding:4px 8px">X</button></td>
+    </tr>
+  `).join('') + `
+    <tr class="total-row">
+      <td>TOTAL</td>
+      <td></td>
+      <td style="text-align:right">${formatAmount(DATA.budget.reduce((a, c) => a + c.amount, 0))}</td>
+      <td></td>
+    </tr>
+  `;
+}
+
+function editBudget(i, field, val) {
+  const b = DATA.budget[i];
+  if (!b) return;
+  if (field === 'amount') {
+    const cleaned = val.replace(/[^0-9.]/g, '');
+    b.amount = parseFloat(cleaned) || 0;
+  } else {
+    b[field] = val.trim();
+  }
+  log(`Budget item "${b.component}" ${field} updated`);
+  save();
+  renderBudget();
+  renderStats();
+}
+
+function addBudgetItem() {
+  DATA.budget.push({ component: 'New Component', description: 'Description', amount: 0 });
+  log('Added new budget item');
+  save();
+  renderBudget();
+  renderStats();
+}
+
+function removeBudgetItem(i) {
+  const name = DATA.budget[i].component;
+  DATA.budget.splice(i, 1);
+  log(`Removed budget item "${name}"`);
+  save();
+  renderBudget();
+  renderStats();
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function renderUCs() {
+  document.getElementById('uc-grid').innerHTML = DATA.ucs.map(uc => `
+    <div class="uc-card" data-uc-id="${uc.id}">
+      <div class="uc-header">
+        <span class="uc-name" contenteditable="true" onblur="editUCName(${uc.id},this.textContent)">${esc(uc.name)}</span>
+        <select class="uc-status-select" onchange="changeUCStatus(${uc.id},this.value)">
+          <option value="pending" ${uc.status==='pending'?'selected':''}>Pending</option>
+          <option value="active" ${uc.status==='active'?'selected':''}>In Progress</option>
+          <option value="completed" ${uc.status==='completed'?'selected':''}>Completed</option>
+        </select>
+      </div>
+      <div class="uc-progress">
+        <div class="uc-progress-header">
+          <span class="uc-progress-label">Progress</span>
+          <span class="uc-progress-pct">${uc.progress}%</span>
+        </div>
+        <input type="range" class="uc-progress-slider" min="0" max="100" value="${uc.progress}" oninput="slideUCProgress(${uc.id},this.value)" />
+        <div class="uc-progress-bar"><div class="uc-progress-fill" style="width:${uc.progress}%"></div></div>
+      </div>
+      <ul class="uc-tasks">
+        ${['roads','water','sewerage','lights','cabling'].map(t => `
+          <li>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+              <input type="checkbox" class="uc-task-checkbox" ${uc.tasks[t]?'checked':''} onchange="toggleTask(${uc.id},'${t}',this.checked)" />
+              ${t.charAt(0).toUpperCase()+t.slice(1)}
+            </label>
+            <span style="font-weight:600;font-size:11px;color:${uc.tasks[t]?'var(--success)':'var(--muted)'}">${uc.tasks[t]?'Done':'Pending'}</span>
+          </li>
+        `).join('')}
+      </ul>
+      <div class="uc-photos">
+        <div class="uc-notes-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Photo Evidence (${uc.photos.length})
+        </div>
+        <div class="uc-photo-input-row">
+          <input type="text" class="uc-photo-input" placeholder="Paste image URL..." id="photo-input-${uc.id}" />
+          <button class="btn btn-sm" onclick="addPhoto(${uc.id})">Add</button>
+        </div>
+        <div class="uc-photo-grid" id="photo-grid-${uc.id}">
+          ${uc.photos.map((p, pi) => `<img class="uc-photo-thumb" src="${esc(p.url)}" alt="Evidence" onclick="openModal('${esc(p.url)}')" onerror="this.style.display='none'" />`).join('')}
+        </div>
+      </div>
+      <div class="uc-notes">
+        <div class="uc-notes-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Notes (${uc.notes.length})
+        </div>
+        <div class="uc-note-input-row">
+          <input type="text" class="uc-note-input" placeholder="Add a note..." id="note-input-${uc.id}" onkeydown="if(event.key==='Enter')addNote(${uc.id})" />
+          <button class="btn btn-sm" onclick="addNote(${uc.id})">Add</button>
+        </div>
+        <div class="uc-note-list" id="note-list-${uc.id}">
+          ${uc.notes.slice(-10).reverse().map((n, ni) => `
+            <div class="uc-note-item">
+              <span class="uc-note-text">${esc(n.text)}</span>
+              <span class="uc-note-time">${formatTimestamp(n.addedAt)}</span>
+              <button class="uc-note-delete" onclick="deleteNote(${uc.id},${uc.notes.length - 1 - ni})">X</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editUCName(id, val) {
+  const uc = DATA.ucs.find(u => u.id === id);
+  if (!uc) return;
+  const old = uc.name;
+  uc.name = val.trim();
+  if (old !== uc.name) {
+    log(`UC name updated: "${old}" -> "${uc.name}"`);
+    save();
+  }
+}
+
+function changeUCStatus(id, val) {
+  const uc = DATA.ucs.find(u => u.id === id);
+  if (!uc) return;
+  uc.status = val;
+  log(`${uc.name} status changed to <strong>${val}</strong>`);
+  save();
+  renderAll();
+}
+
+function slideUCProgress(id, val) {
+  const uc = DATA.ucs.find(u => u.id === id);
+  if (!uc) return;
+  uc.progress = parseInt(val);
+  log(`${uc.name} progress updated to <strong>${uc.progress}%</strong>`);
+  save();
+  const card = document.querySelector(`[data-uc-id="${id}"]`);
+  if (card) {
+    card.querySelector('.uc-progress-pct').textContent = uc.progress + '%';
+    card.querySelector('.uc-progress-fill').style.width = uc.progress + '%';
+  }
+  updateOverall();
+}
+
+function toggleTask(id, task, checked) {
+  const uc = DATA.ucs.find(u => u.id === id);
+  if (!uc) return;
+  uc.tasks[task] = checked;
+  log(`${uc.name} task "${task}" marked as <strong>${checked?'done':'pending'}</strong>`);
+  save();
+  renderUCs();
+  renderGallery();
+}
+
+function addPhoto(id) {
+  const input = document.getElementById('photo-input-' + id);
+  const url = input.value.trim();
+  if (!url) return;
+  const uc = DATA.ucs.find(u => u.id === id);
+  if (!uc) return;
+  uc.photos.push({ url, addedAt: new Date().toISOString() });
+  log(`${uc.name}: photo evidence added`);
+  input.value = '';
+  save();
+  renderUCs();
+  renderGallery();
+}
+
+function addNote(id) {
+  const input = document.getElementById('note-input-' + id);
+  const text = input.value.trim();
+  if (!text) return;
+  const uc = DATA.ucs.find(u => u.id === id);
+  if (!uc) return;
+  uc.notes.push({ text, addedAt: new Date().toISOString() });
+  log(`${uc.name}: note added "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`);
+  input.value = '';
+  save();
+  renderUCs();
+}
+
+function deleteNote(ucId, noteIndex) {
+  const uc = DATA.ucs.find(u => u.id === ucId);
+  if (!uc) return;
+  const removed = uc.notes.splice(noteIndex, 1)[0];
+  log(`${uc.name}: note deleted "${(removed.text||'').substring(0, 40)}"`);
+  save();
+  renderUCs();
+}
+
+function openModal(url) {
+  document.getElementById('modal-img').src = url;
+  document.getElementById('photo-modal').classList.add('active');
+}
+
+function renderGallery() {
+  const filters = document.getElementById('gallery-filters');
+  filters.innerHTML = `<button class="gallery-filter-btn ${galleryFilter==='all'?'active':''}" onclick="setGalleryFilter('all')">All</button>` +
+    DATA.ucs.filter(u => u.photos.length > 0).map(u =>
+      `<button class="gallery-filter-btn ${galleryFilter===u.name?'active':''}" onclick="setGalleryFilter('${esc(u.name)}')">${esc(u.name)}</button>`
+    ).join('');
+
+  let photos = [];
+  DATA.ucs.forEach(u => {
+    u.photos.forEach(p => photos.push({ ...p, uc: u.name }));
+  });
+  if (galleryFilter !== 'all') photos = photos.filter(p => p.uc === galleryFilter);
+
+  const grid = document.getElementById('gallery-grid');
+  const empty = document.getElementById('gallery-empty');
+  if (!photos.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    grid.innerHTML = photos.map(p => `
+      <div class="gallery-item" onclick="openModal('${esc(p.url)}')">
+        <img src="${esc(p.url)}" alt="Evidence" onerror="this.parentElement.style.display='none'" />
+        <div class="gallery-item-label">${esc(p.uc)}</div>
+      </div>
+    `).join('');
+  }
+}
+
+function setGalleryFilter(f) {
+  galleryFilter = f;
+  renderGallery();
+}
+
+function renderLog() {
+  const filterUc = (document.getElementById('log-filter-uc')?.value || '').toLowerCase();
+  const filterAction = (document.getElementById('log-filter-action')?.value || '').toLowerCase();
+  let items = DATA.activityLog;
+  if (filterUc) items = items.filter(l => l.action.toLowerCase().includes(filterUc));
+  if (filterAction) items = items.filter(l => l.action.toLowerCase().includes(filterAction));
+  document.getElementById('log-list').innerHTML = items.slice(0, 200).map(l => `
+    <div class="log-item">
+      <span class="log-time">${formatTimestamp(l.timestamp)}</span>
+      <span class="log-action">${l.action}</span>
+    </div>
+  `).join('') || '<p style="color:var(--muted);font-size:13px;text-align:center;padding:16px">No activity logged yet.</p>';
+}
+
+function clearLog() {
+  if (!confirm('Clear all activity log entries?')) return;
+  DATA.activityLog = [];
+  log('Activity log cleared');
+  save();
+  renderLog();
+}
+
+function renderOfficials() {
+  document.getElementById('officials-body').innerHTML = DATA.officials.map((o, i) => `
+    <tr>
+      <td><span class="editable-cell" contenteditable="true" onblur="editOfficial(${i},'role',this.textContent)">${esc(o.role)}</span></td>
+      <td><span class="editable-cell" contenteditable="true" onblur="editOfficial(${i},'name',this.textContent)">${esc(o.name)}</span></td>
+      <td><span class="editable-cell" contenteditable="true" onblur="editOfficial(${i},'party',this.textContent)">${esc(o.party)}</span></td>
+      <td><span class="editable-cell" contenteditable="true" onblur="editOfficial(${i},'responsibility',this.textContent)">${esc(o.responsibility)}</span></td>
+      <td><button class="btn btn-sm btn-danger" onclick="removeOfficial(${i})" style="padding:4px 8px">X</button></td>
+    </tr>
+  `).join('');
+}
+
+function editOfficial(i, field, val) {
+  const o = DATA.officials[i];
+  if (!o) return;
+  o[field] = val.trim();
+  log(`Official "${o.name}" ${field} updated`);
+  save();
+}
+
+function addOfficial() {
+  DATA.officials.push({ role: 'New Role', name: 'Name', party: 'Party', responsibility: 'Responsibility' });
+  log('Added new official');
+  save();
+  renderOfficials();
+}
+
+function removeOfficial(i) {
+  const name = DATA.officials[i].name;
+  DATA.officials.splice(i, 1);
+  log(`Removed official "${name}"`);
+  save();
+  renderOfficials();
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(DATA, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'lyari-ltp-data-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  log('Data exported as JSON');
+  save();
+  renderLog();
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const imported = JSON.parse(ev.target.result);
+      if (imported && imported.ucs) {
+        DATA = imported;
+        DATA.activityLog = DATA.activityLog || [];
+        log('Data imported from JSON file');
+        save();
+        renderAll();
+        alert('Data imported successfully!');
+      } else {
+        alert('Invalid data format.');
+      }
+    } catch(err) {
+      alert('Error reading file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+let currentTheme = localStorage.getItem('lyari-ltp-theme') || 'light';
 function applyTheme(t) {
-  document.body.classList.toggle("dark", t === "dark");
-  localStorage.setItem("lyari-ltp-theme", t);
+  document.body.classList.toggle('dark', t === 'dark');
+  localStorage.setItem('lyari-ltp-theme', t);
   currentTheme = t;
 }
 function toggleTheme() {
-  applyTheme(currentTheme === "dark" ? "light" : "dark");
+  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
 }
+
+function renderAll() {
+  updateOverall();
+  renderStats();
+  renderTimeline();
+  renderBudget();
+  renderUCs();
+  renderGallery();
+  renderLog();
+  renderOfficials();
+  document.getElementById('last-updated').textContent = formatTimestamp(DATA.lastUpdated);
+}
+
 applyTheme(currentTheme);
+renderAll();
 </script>
 
 </body>
