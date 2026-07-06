@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lyari, Karachi - 3D Crisis Map</title>
+<meta name="description" content="Interactive 3D crisis map of Lyari, Karachi — 8 critical issues, who is responsible, and a root-cause revolution roadmap. English + Urdu." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="dns-prefetch" href="https://tiles.openfreemap.org">
+<link rel="preload" as="script" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js">
+<link href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="styles.css" rel="stylesheet" />
+<script defer src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="db.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+
+<!-- Grain / noise overlay -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
+<!-- Preloader -->
+<div id="preloader">
+  <div class="preloader-inner">
+    <img src="assets/welcome-lyari.jpg" alt="Welcome to Lyari" class="preloader-image" />
+    <div class="preloader-line"></div>
+    <div class="preloader-logo">
+      <span class="preloader-letter" style="--i:0">L</span>
+      <span class="preloader-letter" style="--i:1">Y</span>
+      <span class="preloader-letter" style="--i:2">A</span>
+      <span class="preloader-letter" style="--i:3">R</span>
+      <span class="preloader-letter" style="--i:4">I</span>
+    </div>
+    <div class="preloader-sub">Crisis Mapping Project</div>
+    <div class="preloader-progress">
+      <div class="preloader-progress-bar" id="preloader-bar"></div>
+    </div>
+    <div class="preloader-percent" id="preloader-percent">0%</div>
+  </div>
+</div>
+
+<!-- Welcome Modal -->
+<div id="welcome-overlay" class="welcome-overlay">
+  <div class="welcome-modal">
+    <button class="welcome-close" id="welcome-close" aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <div class="welcome-content">
+      <div class="welcome-badge">Interactive Data Visualization</div>
+      <h1 class="welcome-title">
+        <span class="welcome-title-line" style="--line:1">Mapping the</span>
+        <span class="welcome-title-line accent" style="--line:2">Crisis of Lyari</span>
+        <span class="welcome-title-line" style="--line:3">Karachi, Pakistan</span>
+      </h1>
+      <div class="welcome-divider"></div>
+      <div class="welcome-info">
+        <div class="welcome-col">
+          <h3>About This Project</h3>
+          <p>An interactive 3D crisis map documenting 8 critical issues facing Lyari, one of Karachi's oldest and most densely populated districts. Built to demand accountability from responsible agencies.</p>
+        </div>
+        <div class="welcome-col">
+          <h3>How to Use</h3>
+          <img src="assets/welcome-lyari.jpg" alt="Welcome to Lyari Town" class="welcome-howto-img" />
+          <ul class="welcome-steps">
+            <li><span class="step-num">01</span> Click markers on the map to explore issues</li>
+            <li><span class="step-num">02</span> Use the sidebar to browse all reports</li>
+            <li><span class="step-num">03</span> Toggle EN/UR for full Urdu translation</li>
+            <li><span class="step-num">04</span> Click "Read Full Report" for detailed analysis</li>
+            <li><span class="step-num">05</span> Check "Chain of Accountability" to see exactly who's responsible</li>
+          </ul>
+        </div>
+      </div>
+      <div class="welcome-stats">
+        <div class="welcome-stat">
+          <span class="welcome-stat-num">8</span>
+          <span class="welcome-stat-label">Critical Issues</span>
+        </div>
+        <div class="welcome-stat">
+          <span class="welcome-stat-num">13</span>
+          <span class="welcome-stat-label">Union Councils</span>
+        </div>
+        <div class="welcome-stat">
+          <span class="welcome-stat-num">25.28B</span>
+          <span class="welcome-stat-label">PKR Project</span>
+        </div>
+      </div>
+      <button class="welcome-cta" id="welcome-cta">
+        <span>Explore the Map</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+    <div class="welcome-visual">
+      <div class="welcome-grid"></div>
+      <div class="welcome-glow"></div>
+      <svg class="arch-art" viewBox="0 0 300 560" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <filter id="archGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="2.6" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="arch-wire" filter="url(#archGlow)" fill="none" stroke="var(--accent)" stroke-width="1">
+          <!-- Left pillar lattice -->
+          <g class="arch-pillar">
+            <line x1="18" y1="150" x2="18" y2="540"/>
+            <line x1="38" y1="150" x2="38" y2="540"/>
+            <line x1="18" y1="180" x2="38" y2="180"/>
+            <line x1="18" y1="230" x2="38" y2="230"/>
+            <line x1="18" y1="280" x2="38" y2="280"/>
+            <line x1="18" y1="330" x2="38" y2="330"/>
+            <line x1="18" y1="380" x2="38" y2="380"/>
+            <line x1="18" y1="180" x2="38" y2="230"/>
+            <line x1="38" y1="180" x2="18" y2="230"/>
+            <line x1="18" y1="280" x2="38" y2="330"/>
+            <line x1="38" y1="280" x2="18" y2="330"/>
+            <rect x="6" y="395" width="44" height="66" rx="2"/>
+            <line x1="12" y1="408" x2="44" y2="408"/>
+            <line x1="12" y1="418" x2="44" y2="418"/>
+            <line x1="12" y1="428" x2="38" y2="428"/>
+          </g>
+          <!-- Right pillar lattice (mirrored) -->
+          <g class="arch-pillar">
+            <line x1="262" y1="150" x2="262" y2="540"/>
+            <line x1="282" y1="150" x2="282" y2="540"/>
+            <line x1="262" y1="180" x2="282" y2="180"/>
+            <line x1="262" y1="230" x2="282" y2="230"/>
+            <line x1="262" y1="280" x2="282" y2="280"/>
+            <line x1="262" y1="330" x2="282" y2="330"/>
+            <line x1="262" y1="380" x2="282" y2="380"/>
+            <line x1="262" y1="180" x2="282" y2="230"/>
+            <line x1="282" y1="180" x2="262" y2="230"/>
+            <line x1="262" y1="280" x2="282" y2="330"/>
+            <line x1="282" y1="280" x2="262" y2="330"/>
+            <rect x="250" y="395" width="44" height="66" rx="2"/>
+            <line x1="256" y1="408" x2="288" y2="408"/>
+            <line x1="256" y1="418" x2="288" y2="418"/>
+            <line x1="256" y1="428" x2="282" y2="428"/>
+          </g>
+          <!-- Arch -->
+          <path id="archCurve" d="M28,150 C28,55 272,55 272,150"/>
+          <path d="M28,150 C28,70 272,70 272,150" stroke-opacity=".4"/>
+          <circle cx="150" cy="66" r="12"/>
+          <circle cx="150" cy="66" r="5"/>
+        </g>
+        <g class="arch-dots" fill="var(--accent)">
+          <circle cx="28" cy="150" r="2"/><circle cx="272" cy="150" r="2"/>
+          <circle cx="60" cy="94" r="1.6"/><circle cx="90" cy="70" r="1.6"/>
+          <circle cx="150" cy="55" r="1.6"/><circle cx="210" cy="70" r="1.6"/>
+          <circle cx="240" cy="94" r="1.6"/>
+        </g>
+        <text class="arch-text-en" x="150" y="0" text-anchor="middle" dominant-baseline="middle">
+          <textPath href="#archCurve" startOffset="50%">WELCOME TO LYARI</textPath>
+        </text>
+        <text class="arch-text-title" x="150" y="270" text-anchor="middle">LYARI TOWN</text>
+        <text class="arch-text-ur" x="150" y="298" text-anchor="middle" dir="rtl">لیاری میں خوش آمدید</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="app">
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="main-title" id="main-title" data-en="Lyari, Karachi" data-ur="لیاری، کراچی">Lyari<span class="title-accent">,</span> Karachi</h1>
+          <p class="main-subtitle" data-en="A District in Crisis" data-ur="بحران کا شکار ضلع">A District in Crisis</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="submit-btn" id="submit-btn" onclick="openSubmitForm()" title="Submit a new issue">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span data-en="Submit Issue" data-ur="\u0645\u0633\u0626\u0644\u06c1 \u0628\u0631\u0648\u062c\u06b0\u06cc\u06ba">Submit Issue</span>
+        </button>
+        <button id="lang-toggle" class="lang-btn hidden" onclick="toggleLang()" title="Toggle language (Ctrl+L)">EN / &#x0627;&#x0631;&#x062F;&#x0648;</button>
+        <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="info-btn" id="info-btn" title="About this project" onclick="showWelcome()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="--accent: var(--project)">&#x20B9;</div>
+        <div class="stat-content">
+          <b data-en="Rs 25.28B" data-ur="\u20a8 25.28 \u0627\u0631\u0628">Rs 25.28B</b>
+          <span data-en="Transformation" data-ur="\u0679\u0631\u0627\u0646\u0633\u0641\u0627\u0631\u0645\u06cc\u0634\u0646">Transformation</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="--accent: var(--infra)">&#x1F4A7;</div>
+        <div class="stat-content">
+          <b data-en="1+ Month" data-ur="1+ \u0645\u06c1\u06cc\u0646\u06c1">1+ Month</b>
+          <span data-en="No water" data-ur="\u067e\u0627\u0646\u06cc \u0646\u06c7\u0634\u06d2">No water</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="--accent: var(--crit)">&#x26A1;</div>
+        <div class="stat-content">
+          <b data-en="14-16 hrs" data-ur="14-16 \u06af\u06be\u0646\u0679\u06d2">14-16 hrs</b>
+          <span data-en="Outages" data-ur="\u0644\u0648\u0688\u0634\u06cc\u0688\u0646\u06af">Outages</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <span class="filter-chip active" data-filter="all" data-en="All" data-ur="\u062a\u0645\u0627\u0645">All</span>
+      <span class="filter-chip" data-filter="project" data-en="Project" data-ur="\u067e\u0631\u0648\u062c\u06cc\u06a9\u0679">Project</span>
+      <span class="filter-chip" data-filter="infra" data-en="Infra" data-ur="\u0627\u0646\u0641\u0631\u0627\u0633\u0679\u0631\u06a9\u0681\u0631">Infra</span>
+      <span class="filter-chip" data-filter="social" data-en="Social" data-ur="\u0633\u0645\u0627\u062c\u06cc">Social</span>
+    </div>
+
+    <div class="severity-row">
+      <span class="sev-item"><b style="background:var(--crit)"></b><span data-en="Critical" data-ur="\u0627\u0646\u062a\u06c1\u0627\u0626\u06cc">Critical</span></span>
+      <span class="sev-item"><b style="background:var(--severe)"></b><span data-en="Severe" data-ur="\u0633\u0646\u06af\u06cc\u0646">Severe</span></span>
+      <span class="sev-item"><b style="background:var(--high)"></b><span data-en="High" data-ur="\u0632\u06cc\u0627\u062f\u06c1">High</span></span>
+    </div>
+
+    <div class="sidebar-scroll">
+      <div id="cards" class="cards-container"></div>
+
+      <div class="sidebar-footer">
+        <div class="disclaimer" id="disclaimer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <p><strong>Note:</strong> UC names and boundaries may not be fully up-to-date. Data sourced from news reports and government announcements. Verify critical information against original sources.</p>
+        </div>
+        <div class="disclaimer" id="disclaimer-ur" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <p><strong>\u0627\u0637\u0644\u0627\u0639:</strong> \u06cc\u0648 \u0633\u06cc \u06a9\u06d2 \u0646\u0627\u0645 \u0627\u0648\u0631 \u062d\u062f\u0648\u062f \u0645\u06a9\u0645\u0644 \u0637\u0648\u0631 \u067e\u0631 \u062a\u0627\u0632\u06c1 \u062a\u0631\u06cc\u0646 \u0646\u06c1\u06cc\u06ba \u06c1\u0648 \u0633\u06a9\u062a\u06d2\u06d4 \u0688\u06cc\u0679\u0627 \u062e\u0628\u0631\u0648\u06ba \u0627\u0648\u0631 \u0633\u0631\u06a9\u0627\u0631\u06cc \u0627\u0639\u0644\u0627\u0646\u0627\u062a \u0633\u06d2 \u0644\u06cc\u0627 \u06af\u06cc\u0627 \u06c1\u06d2\u06d4 \u0627\u06c1\u0645 \u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0635\u0644 \u0630\u0631\u0627\u0626\u0639 \u0633\u06d2 \u062a\u0635\u062f\u06cc\u0642 \u06a9\u0631\u06cc\u06ba\u06d4</p>
+        </div>
+        <!-- Admin link hidden from public view - accessible via direct URL only -->
+        <p class="credit" id="credit-en">
+          Basemap &copy; OpenStreetMap | Tiles by OpenFreeMap
+        </p>
+        <p class="credit" id="credit-ur" style="display:none">
+          \u0628\u06cc\u0633 \u0645\u06cc\u067e &copy; OpenStreetMap | \u0679\u0627\u0626\u0644\u0632 OpenFreeMap
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <div id="map">
+    <div id="titlebar">
+      <div class="titlebar-inner">
+        <span class="titlebar-dot"></span>
+        <b id="titlebar-text">Lyari Crisis Map</b>
+        <span class="titlebar-sep">-</span>
+        <span id="titlebar-sub">Click any marker or card for details</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Issue Detail Modal -->
+<div id="overlay">
+  <div id="modal">
+    <div id="modal-head">
+      <div class="top-row">
+        <div class="modal-title-area">
+          <span class="modal-issue-num" id="modal-num"></span>
+          <h2 id="modal-title"></h2>
+        </div>
+        <button id="modal-close" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="badges" id="modal-badges"></div>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Community Edit Modal -->
+<div id="edit-overlay">
+  <div id="edit-modal">
+    <div id="edit-head">
+      <div class="top-row">
+        <h2 data-en="Suggest an Edit" data-ur="\u062a\u0631\u0645\u06cc\u0645 \u062a\u062c\u062f\u06cc\u062f">Suggest an Edit</h2>
+        <button id="edit-close" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <p class="edit-subtitle" data-en="Help us correct or improve this information" data-ur="\u0627\u0633 \u0645\u0639\u0644\u0648\u0645\u0627\u062a \u06a9\u0648 \u062a\u0631\u0645\u06cc\u0645 \u06cc\u0627 \u0628\u0647\u062a\u0631 \u0628\u0646\u0627\u0626\u06cc\u0646 \u0645\u06cc\u06ba \u0627\u0633 \u06a9\u0627 \u0645\u0639\u0627\u0648\u0646\u062a \u06a9\u0631\u06cc\u06ba">Help us correct or improve this information</p>
+    </div>
+    <form id="edit-form" onsubmit="handleEditSubmission(event)">
+      <input type="hidden" id="edit-type" value="" />
+      <input type="hidden" id="edit-target" value="" />
+      <div class="form-row">
+        <div class="form-group">
+          <label data-en="What needs correction?" data-ur="\u06a9\u06cc\u0627 \u062a\u0631\u0645\u06cc\u0645 \u0632\u0631\u0648\u0631\u062a \u06c1\u06d2">What needs correction?</label>
+          <textarea id="edit-details" required rows="3" placeholder="e.g., Correct phone number is +92-21-XXXXXXX, or photo shows wrong person..."></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-en="Your Name (optional)" data-ur="\u0622\u067e \u06a9\u0627 \u0646\u0627\u0645">Your Name (optional)</label>
+          <input type="text" id="edit-name" placeholder="Anonymous" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" onclick="closeEditModal()" data-en="Cancel" data-ur="\u0645\u0646\u0633\u0648\u0642">Cancel</button>
+        <button type="submit" class="btn-submit" data-en="Submit Edit" data-ur="\u062a\u0631\u0645\u06cc\u0645 \u0628\u0631\u0648\u062c\u06b0\u06cc\u06ba \u0628\u0636\u0627\u0626\u0639 \u06a9\u0631\u06cc\u06ba">Submit Edit</button>
+      </div>
+    </form>
+    <div id="edit-success" style="display:none">
+      <div class="success-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--env)" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <h3 data-en="Edit Submitted!" data-ur="\u062a\u0631\u0645\u06cc\u0645 \u0628\u0636\u0627\u0626\u0639 \u06c1\u0648">Edit Submitted!</h3>
+      <p data-en="Your edit will be reviewed and approved by our team. Thank you for helping improve accuracy." data-ur="\u0622\u067e \u06a9\u06cc \u062a\u0631\u0645\u06cc\u0645 \u06c1\u0645\u0627\u0631\u06cc \u062a\u0645 \u062a\u0635\u062f\u06cc\u0642 \u06a9\u0631\u06cc\u06ba \u0624\u0631 \u0627\u0633 \u0628\u0631\u0627\u0626\u06cc \u0645\u0648\u0633\u0648\u0639\u06c1 \u0647\u0648\u06af\u06d0\u06d2\u06d4 \u0634\u06a9\u0631\u06cc\u0686\u06d2 \u06a9\u0631\u06cc\u06ba\u06d4">Your edit will be reviewed and approved by our team. Thank you for helping improve accuracy.</p>
+      <button class="btn-submit" onclick="closeEditModal()" data-en="Close" data-ur="\u0628\u0646\u062f">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Submit Issue Modal -->
+<div id="submit-overlay">
+  <div id="submit-modal">
+    <div id="submit-head">
+      <div class="top-row">
+        <h2 data-en="Submit New Issue" data-ur="\u0646\u06cc\u0627 \u0645\u0633\u0626\u0644\u06c1 \u0628\u0631\u0648\u062c\u06b0\u06cc\u06ba">Submit New Issue</h2>
+        <button id="submit-close" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <p class="submit-subtitle" data-en="Report a crisis facing Lyari residents" data-ur="\u0644\u06cc\u0627\u0631\u06cc \u06a9\u0647 \u0628\u0634\u0631\u0627\u0626\u0646\u062f\u0648\u06ba \u06a9\u0648 \u0645\u0635\u0627\u0644\u0628\u06c1 \u06c1\u06d2 \u0628\u0631\u0627\u0626\u06cc\u0632 \u06a9\u0631\u06cc\u06ba">Report a crisis facing Lyari residents</p>
+    </div>
+    <form id="submit-form" onsubmit="handleSubmission(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label data-en="Issue Title" data-ur="\u0645\u0633\u0626\u0644\u06c1 \u06a9\u0627 \u0639\u0646\u0648\u0627\u0646">Issue Title *</label>
+          <input type="text" id="form-title" required placeholder="e.g., Broken water main on Chakiwara Road" />
+        </div>
+      </div>
+      <div class="form-row two-col">
+        <div class="form-group">
+          <label data-en="Category" data-ur="\u0632\u0645\u0631\u06c1">Category *</label>
+          <select id="form-category" required>
+            <option value="infra">Infrastructure</option>
+            <option value="social">Social / Human</option>
+            <option value="env">Environment</option>
+            <option value="project">Transformation Project</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-en="Severity" data-ur="\u0634\u062f\u062a">Severity *</label>
+          <select id="form-severity" required>
+            <option value="critical">Critical</option>
+            <option value="severe">Severe</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row two-col">
+        <div class="form-group">
+          <label data-en="Location Name" data-ur="\u0645\u0642\u0627\u0645 \u06a9\u0627 \u0646\u0627\u0645">Location Name *</label>
+          <input type="text" id="form-location" required placeholder="e.g., Chakiwara, UC-11" />
+        </div>
+        <div class="form-group">
+          <label data-en="Nearest UC" data-ur="\u0642\u0631\u06cc\u0628\u062a\u06cc \u06cc\u0648\u0646\u06cc\u0646 \u06a9\u0627\u0626\u0646\u0633\u0644">Nearest UC</label>
+          <select id="form-uc">
+            <option value="UC-1: Agra Taj Colony">UC-1: Agra Taj Colony</option>
+            <option value="UC-2: Daryaabad">UC-2: Daryaabad</option>
+            <option value="UC-3: Nawabad">UC-3: Nawabad</option>
+            <option value="UC-4: Khada Memon Society">UC-4: Khada Memon Society</option>
+            <option value="UC-5: Baghdadi">UC-5: Baghdadi</option>
+            <option value="UC-6: Moosa Lane">UC-6: Moosa Lane</option>
+            <option value="UC-7: Shah Baig Line">UC-7: Shah Baig Line</option>
+            <option value="UC-8: Bihar Colony">UC-8: Bihar Colony</option>
+            <option value="UC-9: Ragiwara">UC-9: Ragiwara</option>
+            <option value="UC-10: Singo Line">UC-10: Singo Line</option>
+            <option value="UC-11: Chakiwara">UC-11: Chakiwara</option>
+            <option value="UC-12: Allama Iqbal Colony">UC-12: Allama Iqbal Colony</option>
+            <option value="UC-13: Jinnahabad-Ghulam Shah Lane">UC-13: Jinnahabad</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-en="Photos (optional, max 3)" data-ur="\u062a\u0635\u0627\u0648\u06cc\u0631 (\u0645\u0631\u062a\u0628\u0637\u060c \u0632\u06cc\u0627\u062f\u062a\u0631 \u06c7\u0646)">Photos (optional, max 3)</label>
+          <input type="file" id="form-photos" accept="image/*" multiple />
+          <div id="photo-preview" class="photo-preview"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-en="Description / What is happening?" data-ur="\u062a\u0641\u0635\u06cc\u0644 / \u06a9\u06cc\u0627 \u06c1\u0648 \u0631\u06be\u0627 \u06c7\u062a\u0646\u0627 \u06c7\u0633\u06cc \u0631\u06be\u0627 \u06c7\u0633\u06d2 \u06c7\u0633\u06a9\u06cc \u0639\u0644\u0627\u0642\u06c1 \u0645\u06cc\u06ba \u06c7\u062a\u0646\u0627 \u0631\u06be\u0627 \u06c7\u0633\u06cc \u0631\u06be\u0627 \u06c7\u0633\u06d2">Description / What is happening? *</label>
+          <textarea id="form-description" required rows="3" placeholder="Describe the issue, how long it has been ongoing, and who is affected..."></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-en="Facts / Evidence (one per line)" data-ur="\u0645\u0639\u0644\u0648\u0645\u0627\u062a / \u0633\u0628\u0648\u062a (\u06c1\u0631 \u0633\u0637\u06be \u0627\u06cc\u06a9 \u0644\u0627\u0626\u0646)">Facts / Evidence (one per line)</label>
+          <textarea id="form-facts" rows="3" placeholder="Bullet point facts about this issue..."></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-en="Your Name (optional)" data-ur="\u0622\u067e \u06a9\u0627 \u0646\u0627\u0645 (\u0645\u0631\u062a\u0628\u0637)">Your Name (optional)</label>
+          <input type="text" id="form-name" placeholder="Anonymous" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" onclick="closeSubmitForm()" data-en="Cancel" data-ur="\u0645\u0646\u0633\u0648\u0642">Cancel</button>
+        <button type="submit" class="btn-submit" data-en="Submit Issue" data-ur="\u0645\u0633\u0626\u0644\u06c1 \u0628\u0631\u0648\u062c\u06b0\u06cc\u06ba">Submit Issue</button>
+      </div>
+    </form>
+    <div id="submit-success" style="display:none">
+      <div class="success-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--env)" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <h3 data-en="Issue Submitted!" data-ur="\u0645\u0633\u0626\u0644\u06c1 \u0628\u0631\u0648\u062c\u06b0\u06cc\u06ba \u06c1\u0648 \u06c7\u062a\u0646\u0627">Issue Submitted!</h3>
+      <p data-en="Your report has been added to the map. It will appear with a 'Community' badge." data-ur="\u0622\u067e \u06a9\u06cc \u0631\u067e\u0648\u0631\u0679 \u0646\u0642\u0634\u06d0 \u067e\u0631 \u0636\u0645\u0646 \u0647\u0648 \u0686\u06a9\u06cc \u06c1\u06d2\u06d4 \u0627\u0633 \u0645\u06cc\u06ba 'Community' \u0628\u06cc\u0688 \u0644\u06af\u06cc \u06af\u06d0\u06d2\u06d4">Your report has been added to the map. It will appear with a 'Community' badge.</p>
+      <button class="btn-submit" onclick="closeSubmitForm()" data-en="Close" data-ur="\u0628\u0646\u062f">Close</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

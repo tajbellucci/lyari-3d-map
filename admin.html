@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lyari Crisis Map - Admin Panel</title>
+  <style>
+    :root {
+      --bg: #0f141a; --panel: #161d27; --panel-2: #1c2533;
+      --border: #263042; --text: #d3dae2; --text-secondary: #8895a7;
+      --accent: #38bdf8; --env: #4ade80; --crit: #ef4444;
+      --sev: #f97316; --high: #eab308; --muted: #556677;
+    }
+    body.light {
+      --bg: #f8f9fc; --panel: #ffffff; --panel-2: #f1f3f7;
+      --border: #dde2ea; --text: #0f1729; --text-secondary: #4a5568;
+      --muted: #8895a7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; }
+
+    .admin-header { background: var(--panel); border-bottom: 1px solid var(--border); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; }
+    .admin-header h1 { font-size: 20px; font-weight: 800; letter-spacing: -.4px; }
+    .admin-header h1 span { color: var(--accent); }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .theme-btn { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; cursor: pointer; color: var(--text); font-size: 13px; text-decoration: none; }
+    .theme-btn:hover { background: var(--border); }
+
+    .tabs { display: flex; gap: 0; padding: 0 32px; background: var(--panel); border-bottom: 1px solid var(--border); }
+    .tab { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab:hover { color: var(--text); }
+    .tab .count { background: var(--crit); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px; font-weight: 700; }
+    .tab .count.green { background: var(--env); color: #000; }
+
+    .content { padding: 24px 32px; max-width: 1200px; margin: 0 auto; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .stat-card .label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px; }
+    .stat-card .value { font-size: 28px; font-weight: 800; margin-top: 4px; }
+    .stat-card .value.crit { color: var(--crit); }
+    .stat-card .value.env { color: var(--env); }
+    .stat-card .value.accent { color: var(--accent); }
+    .stat-card .value.sev { color: var(--sev); }
+
+    .approved-banner { background: linear-gradient(135deg, #065f46, #064e3b); border: 1px solid var(--env); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
+    .approved-banner .icon { font-size: 28px; }
+    .approved-banner .info h3 { font-size: 14px; font-weight: 700; color: var(--env); }
+    .approved-banner .info p { font-size: 12px; color: #a7f3d0; margin-top: 2px; }
+    .approved-banner .badge-count { background: var(--env); color: #000; font-size: 22px; font-weight: 800; padding: 8px 16px; border-radius: 10px; margin-left: auto; }
+
+    .table-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: var(--panel-2); text-align: left; padding: 12px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-secondary); font-weight: 600; }
+    td { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+    tr:hover td { background: var(--panel-2); }
+    tr.approved-row td { background: rgba(74, 222, 128, 0.06); }
+    tr.approved-row td:first-child { border-left: 3px solid var(--env); }
+
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    .badge.pending { background: var(--high); color: #000; }
+    .badge.approved { background: var(--env); color: #000; }
+    .badge.rejected { background: var(--crit); color: #fff; }
+
+    .btn { border: none; border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; }
+    .btn-approve { background: var(--env); color: #000; }
+    .btn-approve:hover { filter: brightness(1.15); }
+    .btn-reject { background: var(--crit); color: #fff; }
+    .btn-reject:hover { filter: brightness(1.15); }
+    .btn-view { background: var(--accent); color: #000; }
+    .btn-view:hover { filter: brightness(1.15); }
+    .btn-delete { background: var(--panel-2); color: var(--crit); border: 1px solid var(--border); }
+    .btn-delete:hover { background: var(--crit); color: #fff; }
+
+    .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+    .empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
+    .empty h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+
+    .debug-box { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-family: monospace; font-size: 11px; color: var(--text-secondary); }
+
+    @media (max-width: 768px) {
+      .admin-header { padding: 16px; flex-direction: column; gap: 12px; }
+      .content { padding: 16px; }
+      .tabs { padding: 0 16px; overflow-x: auto; }
+      table { font-size: 12px; }
+      td, th { padding: 8px 10px; }
+      .actions-cell { flex-direction: column; }
+    }
+    /* Auth Gate */
+    .auth-gate { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+    .auth-box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 40px; max-width: 380px; width: 90%; text-align: center; }
+    .auth-box h2 { font-size: 18px; margin-bottom: 6px; }
+    .auth-box p { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+    .auth-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel-2); color: var(--text); font-size: 14px; text-align: center; letter-spacing: 4px; outline: none; margin-bottom: 14px; }
+    .auth-box input:focus { border-color: var(--accent); }
+    .auth-box button { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--accent); color: #000; font-weight: 700; font-size: 14px; cursor: pointer; }
+    .auth-box button:hover { filter: brightness(1.1); }
+    .auth-error { color: var(--crit); font-size: 12px; margin-top: 8px; display: none; }
+    .admin-content { display: none; }
+    .admin-content.authenticated { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- Auth Gate -->
+<div class="auth-gate" id="auth-gate">
+  <div class="auth-box">
+    <h2>Admin Access</h2>
+    <p>Enter the admin password to continue</p>
+    <input type="password" id="auth-password" placeholder="Password" maxlength="30" />
+    <button onclick="attemptAuth()">Unlock</button>
+    <div class="auth-error" id="auth-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- Main Admin Content (hidden until auth) -->
+<div class="admin-content" id="admin-content">
+
+<div class="admin-header">
+  <h1>Lyari Crisis Map <span>Admin</span></h1>
+  <div class="header-actions">
+    <button class="theme-btn" onclick="toggleTheme()">Light/Dark</button>
+    <a href="index.html" class="theme-btn" style="color:var(--accent)">Back to Map</a>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="issues" onclick="switchTab('issues')">
+    Submitted Issues <span class="count" id="issues-count">0</span>
+  </div>
+  <div class="tab" data-tab="edits" onclick="switchTab('edits')">
+    Pending Edits <span class="count" id="edits-count">0</span>
+  </div>
+  <div class="tab" data-tab="approved" onclick="switchTab('approved')">
+    Approved <span class="count green" id="approved-count">0</span>
+  </div>
+</div>
+
+<div class="content">
+  <!-- Debug box to confirm data is loading -->
+    <div class="debug-box" id="debug-box">Loading data...<br><button onclick="testSubmit()" style="margin-top:8px;padding:4px 10px;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;cursor:pointer;font-size:11px;">+ Test Submit (debug)</button></div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="label">Pending Issues</div><div class="value crit" id="stat-pending">0</div></div>
+    <div class="stat-card"><div class="label">Pending Edits</div><div class="value sev" id="stat-edits">0</div></div>
+    <div class="stat-card"><div class="label">Approved</div><div class="value env" id="stat-approved">0</div></div>
+    <div class="stat-card"><div class="label">Total Submitted</div><div class="value accent" id="stat-total">0</div></div>
+  </div>
+
+  <!-- Submitted Issues Section -->
+  <div class="section active" id="section-issues">
+    <!-- Approved issues banner -->
+    <div class="approved-banner" id="approved-banner" style="display:none">
+      <div class="icon">&#10003;</div>
+      <div class="info">
+        <h3>Approved Issues</h3>
+        <p>These issues have been approved and are now live on the map.</p>
+      </div>
+      <div class="badge-count" id="approved-banner-count">0</div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>UC</th>
+            <th>Submitted By</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="issues-tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="issues-empty" style="display:none">
+      <h3>No submitted issues</h3>
+      <p>Community-submitted issues will appear here for review.</p>
+    </div>
+  </div>
+
+  <!-- Pending Edits Section -->
+  <div class="section" id="section-edits">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Target</th>
+            <th>Details</th>
+            <th>Submitted By</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="edits-tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="edits-empty" style="display:none">
+      <h3>No pending edits</h3>
+      <p>Community-suggested corrections will appear here for review.</p>
+    </div>
+  </div>
+
+  <!-- Approved Section -->
+  <div class="section" id="section-approved">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Title / Target</th>
+            <th>Details</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="approved-tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="approved-empty" style="display:none">
+      <h3>No approved items yet</h3>
+      <p>Approved issues and edits will appear here.</p>
+    </div>
+  </div>
+</div>
+
+<script src="db.js"></script>
+<script>
+const ISSUES_KEY = "lyari-submitted-issues";
+const EDITS_KEY = "lyari-community-edits";
+const APPROVED_KEY = "lyari-approved";
+
+// Initialize IndexedDB
+if (typeof LyariDB !== "undefined") {
+  LyariDB.init().catch(e => console.warn("DB init failed, using localStorage:", e));
+}
+
+function getSubmitted() {
+  // Try IndexedDB first, fallback to localStorage
+  if (typeof LyariDB !== "undefined") {
+    return LyariDB.getSubmittedIssues().catch(() => {
+      try { return JSON.parse(localStorage.getItem(ISSUES_KEY)) || []; } catch { return []; }
+    });
+  }
+  try { return JSON.parse(localStorage.getItem(ISSUES_KEY)) || []; } catch { return []; }
+}
+function getEdits() {
+  if (typeof LyariDB !== "undefined") {
+    return LyariDB.getEdits().catch(() => {
+      try { return JSON.parse(localStorage.getItem(EDITS_KEY)) || []; } catch { return []; }
+    });
+  }
+  try { return JSON.parse(localStorage.getItem(EDITS_KEY)) || []; } catch { return []; }
+}
+function getApproved() {
+  if (typeof LyariDB !== "undefined") {
+    return LyariDB.getApproved().catch(() => {
+      try { return JSON.parse(localStorage.getItem(APPROVED_KEY)) || []; } catch { return []; }
+    });
+  }
+  try { return JSON.parse(localStorage.getItem(APPROVED_KEY)) || []; } catch { return []; }
+}
+
+function saveSubmitted(arr) {
+  localStorage.setItem(ISSUES_KEY, JSON.stringify(arr));
+  if (typeof LyariDB !== "undefined") {
+    arr.forEach(issue => LyariDB.addSubmittedIssue(issue).catch(() => {}));
+  }
+}
+function saveEdits(arr) {
+  localStorage.setItem(EDITS_KEY, JSON.stringify(arr));
+}
+function saveApproved(arr) {
+  localStorage.setItem(APPROVED_KEY, JSON.stringify(arr));
+  if (typeof LyariDB !== "undefined") {
+    arr.forEach(item => LyariDB.approveItem(item).catch(() => {}));
+  }
+}
+
+function switchTab(tab) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add("active");
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(`section-${tab}`).classList.add("active");
+  render();
+}
+
+function formatDate(iso) {
+  if (!iso) return "-";
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function render() {
+  const submitted = getSubmitted();
+  const edits = getEdits();
+  const approved = getApproved();
+
+  const pendingIssues = submitted.filter(i => i.status !== "approved");
+  const pendingEdits = edits.filter(e => e.status === "pending");
+  const approvedIssues = approved.filter(a => a.type === "issue");
+  const approvedEdits = approved.filter(a => a.type === "edit");
+
+  // Debug info
+  document.getElementById("debug-box").innerHTML =
+    `<strong>localStorage keys:</strong> ${ISSUES_KEY}, ${EDITS_KEY}, ${APPROVED_KEY}<br>` +
+    `<strong>Raw submitted:</strong> ${localStorage.getItem(ISSUES_KEY) ? "Found (" + submitted.length + " items)" : "NOT FOUND"}<br>` +
+    `<strong>Pending issues:</strong> ${pendingIssues.length} | <strong>Approved issues:</strong> ${approvedIssues.length} | <strong>Pending edits:</strong> ${pendingEdits.length}`;
+
+  document.getElementById("issues-count").textContent = pendingIssues.length;
+  document.getElementById("edits-count").textContent = pendingEdits.length;
+  document.getElementById("approved-count").textContent = approved.length;
+
+  document.getElementById("stat-pending").textContent = pendingIssues.length;
+  document.getElementById("stat-edits").textContent = pendingEdits.length;
+  document.getElementById("stat-approved").textContent = approved.length;
+  document.getElementById("stat-total").textContent = submitted.length + edits.length;
+
+  // Approved banner
+  const banner = document.getElementById("approved-banner");
+  if (approvedIssues.length > 0) {
+    banner.style.display = "flex";
+    document.getElementById("approved-banner-count").textContent = approvedIssues.length;
+  } else {
+    banner.style.display = "none";
+  }
+
+  // Issues table
+  const issuesTbody = document.getElementById("issues-tbody");
+  const issuesEmpty = document.getElementById("issues-empty");
+  if (pendingIssues.length === 0) {
+    issuesTbody.innerHTML = "";
+    issuesEmpty.style.display = "block";
+  } else {
+    issuesEmpty.style.display = "none";
+    issuesTbody.innerHTML = pendingIssues.map((issue, i) => {
+      const origIdx = submitted.indexOf(issue);
+      return `<tr>
+        <td>${formatDate(issue.submittedAt)}</td>
+        <td><strong>${issue.title}</strong></td>
+        <td>${issue.cat || "-"}</td>
+        <td>${issue.loc || "-"}</td>
+        <td>${issue.submittedBy || "Anonymous"}</td>
+        <td><span class="badge pending">${issue.status || "pending"}</span></td>
+        <td class="actions-cell">
+          <button class="btn btn-view" onclick="viewIssue(${origIdx})">View</button>
+          <button class="btn btn-approve" onclick="approveIssue(${origIdx})">Approve</button>
+          <button class="btn btn-reject" onclick="rejectIssue(${origIdx})">Reject</button>
+        </td>
+      </tr>`;
+    }).join("");
+  }
+
+  // Edits table
+  const editsTbody = document.getElementById("edits-tbody");
+  const editsEmpty = document.getElementById("edits-empty");
+  if (pendingEdits.length === 0) {
+    editsTbody.innerHTML = "";
+    editsEmpty.style.display = "block";
+  } else {
+    editsEmpty.style.display = "none";
+    editsTbody.innerHTML = pendingEdits.map((edit, i) => {
+      const origIdx = edits.indexOf(edit);
+      return `<tr>
+        <td>${formatDate(edit.submittedAt)}</td>
+        <td>${edit.type}</td>
+        <td>${edit.target}</td>
+        <td style="max-width:300px">${edit.details}</td>
+        <td>${edit.submittedBy || "Anonymous"}</td>
+        <td><span class="badge pending">pending</span></td>
+        <td class="actions-cell">
+          <button class="btn btn-approve" onclick="approveEdit(${origIdx})">Approve</button>
+          <button class="btn btn-reject" onclick="rejectEdit(${origIdx})">Reject</button>
+        </td>
+      </tr>`;
+    }).join("");
+  }
+
+  // Approved table
+  const approvedTbody = document.getElementById("approved-tbody");
+  const approvedEmpty = document.getElementById("approved-empty");
+  if (approved.length === 0) {
+    approvedTbody.innerHTML = "";
+    approvedEmpty.style.display = "block";
+  } else {
+    approvedEmpty.style.display = "none";
+    approvedTbody.innerHTML = approved.map((item, i) => `<tr class="approved-row">
+      <td>${formatDate(item.approvedAt)}</td>
+      <td><span class="badge approved">${item.type}</span></td>
+      <td><strong>${item.title || item.target || "-"}</strong></td>
+      <td style="max-width:300px">${item.details || item.summaryEn || "-"}</td>
+      <td class="actions-cell">
+        <button class="btn btn-delete" onclick="removeApproved(${i})">Remove</button>
+      </td>
+    </tr>`).join("");
+  }
+}
+
+function viewIssue(idx) {
+  const submitted = getSubmitted();
+  const issue = submitted[idx];
+  if (!issue) return;
+  const w = window.open("", "_blank", "width=600,height=500");
+  w.document.write(`<html><head><title>${issue.title}</title><style>body{font-family:system-ui;padding:20px;background:#0f141a;color:#d3dae2;}h1{font-size:16px;}p{font-size:13px;color:#8895a7;line-height:1.6;}.field{margin:8px 0;}label{font-size:11px;color:#556677;text-transform:uppercase;}</style></head><body>
+    <h1>${issue.title}</h1>
+    <div class="field"><label>Category:</label> ${issue.cat}</div>
+    <div class="field"><label>Severity:</label> ${issue.sev}</div>
+    <div class="field"><label>Location:</label> ${issue.loc}</div>
+    <div class="field"><label>Submitted by:</label> ${issue.submittedBy || "Anonymous"}</div>
+    <div class="field"><label>Description:</label><p>${issue.summaryEn}</p></div>
+    ${issue.images && issue.images.length ? `<div class="field"><label>Photos:</label><br>${issue.images.map(img => `<img src="${img}" style="max-width:100%;max-height:200px;border-radius:8px;margin:4px 0;" />`).join("")}</div>` : ""}
+  </body></html>`);
+}
+
+function approveIssue(idx) {
+  const submitted = getSubmitted();
+  const issue = submitted[idx];
+  if (!issue) return;
+  issue.status = "approved";
+  submitted.splice(idx, 1);
+  saveSubmitted(submitted);
+  const approved = getApproved();
+  approved.push({ ...issue, type: "issue", approvedAt: new Date().toISOString() });
+  saveApproved(approved);
+  render();
+  alert("Issue approved and added to map.");
+}
+
+function rejectIssue(idx) {
+  if (!confirm("Reject and delete this submission?")) return;
+  const submitted = getSubmitted();
+  submitted.splice(idx, 1);
+  saveSubmitted(submitted);
+  render();
+}
+
+function approveEdit(idx) {
+  const edits = getEdits();
+  const edit = edits[idx];
+  if (!edit) return;
+  edits.splice(idx, 1);
+  saveEdits(edits);
+  const approved = getApproved();
+  approved.push({ ...edit, type: "edit", approvedAt: new Date().toISOString() });
+  saveApproved(approved);
+  render();
+  alert("Edit approved. You can now manually apply this correction to app.js.");
+}
+
+function rejectEdit(idx) {
+  if (!confirm("Reject this edit suggestion?")) return;
+  const edits = getEdits();
+  edits.splice(idx, 1);
+  saveEdits(edits);
+  render();
+}
+
+function removeApproved(idx) {
+  if (!confirm("Remove from approved list?")) return;
+  const approved = getApproved();
+  approved.splice(idx, 1);
+  saveApproved(approved);
+  render();
+}
+
+// Theme
+let currentTheme = localStorage.getItem("lyari-admin-theme") || "dark";
+function applyTheme(t) {
+  if (t === "light") document.body.classList.add("light");
+  else document.body.classList.remove("light");
+  localStorage.setItem("lyari-admin-theme", t);
+  currentTheme = t;
+}
+function toggleTheme() { applyTheme(currentTheme === "dark" ? "light" : "dark"); }
+applyTheme(currentTheme);
+
+function testSubmit() {
+  const testIssue = {
+    id: "submitted-" + Date.now(),
+    title: "TEST ISSUE - " + new Date().toLocaleTimeString(),
+    titleUrdu: "ٹیسٹ مسئلہ",
+    cat: "social",
+    sev: "high",
+    loc: "UC-11 Chakiwara (Test)",
+    coords: [67.000, 24.871],
+    summaryEn: "This is a test issue submitted from admin panel for debugging.",
+    summaryUr: "یہ ٹیسٹ مسئلہ ہے",
+    facts: ["Test fact 1", "Test fact 2"],
+    factsUr: ["ٹیسٹ حقیقت 1"],
+    solutions: ["Test solution"],
+    solutionsUr: ["ٹیسٹ حل"],
+    resources: [],
+    sources: [{ t: "Admin Test", u: "#" }],
+    images: [],
+    people: [],
+    isSubmitted: true,
+    submittedBy: "Admin Debug",
+    submittedAt: new Date().toISOString(),
+  };
+  const arr = getSubmitted();
+  arr.push(testIssue);
+  localStorage.setItem(ISSUES_KEY, JSON.stringify(arr));
+  render();
+  alert("Test issue added to localStorage. Check if it appears in the table.");
+}
+
+render();
+</script>
+
+</div><!-- end admin-content -->
+
+<script>
+// Auth Gate
+const ADMIN_PASSWORD = "hawa";
+
+function attemptAuth() {
+  const input = document.getElementById("auth-password");
+  const error = document.getElementById("auth-error");
+  if (input.value === ADMIN_PASSWORD) {
+    document.getElementById("auth-gate").style.display = "none";
+    document.getElementById("admin-content").classList.add("authenticated");
+    sessionStorage.setItem("lyari-admin-auth", "1");
+  } else {
+    error.style.display = "block";
+    input.value = "";
+    input.focus();
+  }
+}
+
+document.getElementById("auth-password").addEventListener("keydown", e => {
+  if (e.key === "Enter") attemptAuth();
+});
+
+// Check if already authenticated in this session
+if (sessionStorage.getItem("lyari-admin-auth") === "1") {
+  document.getElementById("auth-gate").style.display = "none";
+  document.getElementById("admin-content").classList.add("authenticated");
+}
+</script>
+
+</body>
+</html>
