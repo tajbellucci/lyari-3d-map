@@ -6,15 +6,15 @@
   <title>Lyari Crisis Map - Admin Panel</title>
   <style>
     :root {
-      --bg: #0f141a; --panel: #161d27; --panel-2: #1c2533;
-      --border: #263042; --text: #d3dae2; --text-secondary: #8895a7;
-      --accent: #38bdf8; --env: #4ade80; --crit: #ef4444;
-      --sev: #f97316; --high: #eab308; --muted: #556677;
-    }
-    body.light {
       --bg: #f8f9fc; --panel: #ffffff; --panel-2: #f1f3f7;
       --border: #dde2ea; --text: #0f1729; --text-secondary: #4a5568;
-      --muted: #8895a7;
+      --muted: #8895a7; --accent: #38bdf8; --env: #4ade80; --crit: #ef4444;
+      --sev: #f97316; --high: #eab308;
+    }
+    body.dark {
+      --bg: #0f141a; --panel: #161d27; --panel-2: #1c2533;
+      --border: #263042; --text: #d3dae2; --text-secondary: #8895a7;
+      --muted: #556677;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; }
@@ -472,11 +472,11 @@ function removeApproved(idx) {
 }
 
 // Theme
-let currentTheme = localStorage.getItem("lyari-admin-theme") || "dark";
+let currentTheme = localStorage.getItem("lyari-theme") || "light";
 function applyTheme(t) {
-  if (t === "light") document.body.classList.add("light");
-  else document.body.classList.remove("light");
-  localStorage.setItem("lyari-admin-theme", t);
+  if (t === "dark") document.body.classList.add("dark");
+  else document.body.classList.remove("dark");
+  localStorage.setItem("lyari-theme", t);
   currentTheme = t;
 }
 function toggleTheme() { applyTheme(currentTheme === "dark" ? "light" : "dark"); }

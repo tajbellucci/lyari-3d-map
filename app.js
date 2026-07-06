@@ -724,10 +724,10 @@ welcomeOverlay.addEventListener("click", e => { if (e.target === welcomeOverlay)
 let currentTheme = localStorage.getItem("lyari-theme") || "light";
 
 function applyTheme(theme) {
-  if (theme === "light") {
-    document.body.classList.add("light");
+  if (theme === "dark") {
+    document.body.classList.add("dark");
   } else {
-    document.body.classList.remove("light");
+    document.body.classList.remove("dark");
   }
   localStorage.setItem("lyari-theme", theme);
   currentTheme = theme;
